@@ -23,7 +23,7 @@ CREATE TYPE payment_details_enum AS ENUM (
 );
 
 CREATE TABLE Account (
-    AccoundID BIGSERIAL PRIMARY KEY NOT NULL,
+    AccountID BIGINT PRIMARY KEY NOT NULL,
     Name VARCHAR(255),
     Email VARCHAR(255) UNIQUE,
     Password VARCHAR(255) UNIQUE,
@@ -66,10 +66,11 @@ CREATE TABLE Account (
 
 -- Tabel "Product"
 CREATE TABLE Product (
-    ProductID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
+    ProductID BIGINT PRIMARY KEY NOT NULL UNIQUE,
     ProductName VARCHAR(255),
     ProductCost INT,
-    FOREIGN KEY (AccoundID) REFERENCES Account (AccoundID),
+    AccountID BIGINT, -- Kolom untuk kunci asing
+    FOREIGN KEY (AccountID) REFERENCES Account(AccountID),
     PostedDate DATE,
     ProductIMG bytea, 
     Description VARCHAR(255),
@@ -78,23 +79,27 @@ CREATE TABLE Product (
 
 -- Tabel "Shopping_Cart"
 CREATE TABLE Shopping_Cart (
-    ShoppingCartID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
+    ShoppingCartID BIGINT PRIMARY KEY NOT NULL UNIQUE,
     Created DATE,
-    FOREIGN KEY (AccoundID) REFERENCES Account (AccoundID)
+    AccountID BIGINT, -- Kolom untuk kunci asing
+    FOREIGN KEY (AccountID) REFERENCES Account(AccountID)
 );
 
 -- Tabel "Reviews"
 CREATE TABLE Reviews (
-    ReviewID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
-    FOREIGN KEY (AccoundID) REFERENCES Account (AccoundID),
+    ReviewID BIGINT PRIMARY KEY NOT NULL UNIQUE,
+    AccountID BIGINT, -- Kolom untuk kunci asing
+    FOREIGN KEY (AccountID) REFERENCES Account (AccountID),
     ReviewContent VARCHAR(255),
     Rating INT
 );
 
 -- Tabel "Orders"
 CREATE TABLE Orders (
-    OrderID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
-    FOREIGN KEY (AccoundID) REFERENCES Account (AccoundID),
+    OrderID BIGINT PRIMARY KEY NOT NULL UNIQUE,
+    AccountID BIGINT, -- Kolom untuk kunci asing
+    ProductID BIGINT,
+    FOREIGN KEY (AccountID) REFERENCES Account (AccountID),
     FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
     TotalAmount DECIMAL,
     OrderDate DATE,
@@ -105,6 +110,7 @@ CREATE TABLE Orders (
 -- Tabel "Payment"
 CREATE TABLE Payment (
     PaymentID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
+    OrderID BIGINT,
     FOREIGN KEY (OrderID) REFERENCES Orders (OrderID),
     Paid BOOLEAN,
     Total DECIMAL,

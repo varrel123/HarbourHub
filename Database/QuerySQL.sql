@@ -118,3 +118,43 @@ CREATE TABLE Payment (
 );
 
 
+                    --TESTER--
+
+-- Isi tabel Account
+INSERT INTO Account (Name, Email, Password, Address, Phone, Role)
+VALUES
+    ('John Doe', 'johndoe@example.com', 'password123', '123 Main St', 123456789, 'FisherMan'),
+    ('Alice Smith', 'alicesmith@example.com', 'password456', '456 Elm St', 987654321, 'Traders');
+
+-- Isi tabel Product
+INSERT INTO Product (ProductName, ProductCost, AccountID, PostedDate, ProductIMG, Description, CatchDate)
+VALUES
+    ('Fish 1', 20, 1, '2023-10-26', BYTEA_VALUE, 'Fresh catch of the day', '2023-10-25'),
+    ('Fish 2', 15, 1, '2023-10-26', BYTEA_VALUE, 'Great for grilling', '2023-10-24'),
+    ('Fish 3', 30, 2, '2023-10-26', BYTEA_VALUE, 'Premium quality', '2023-10-25');
+
+-- Isi tabel Shopping_Cart
+INSERT INTO Shopping_Cart (Created, AccountID)
+VALUES
+    ('2023-10-26', 1),
+    ('2023-10-25', 2);
+
+-- Isi tabel Reviews
+INSERT INTO Reviews (AccountID, ReviewContent, Rating)
+VALUES
+    (1, 'Great product!', 5),
+    (2, 'Excellent service!', 4);
+
+-- Isi tabel Orders
+INSERT INTO Orders (AccountID, ProductID, TotalAmount, OrderDate, DeliveryDate, DeliveryStatus)
+VALUES
+    (1, 1, 20, '2023-10-26', '2023-10-27', 'Pending'),
+    (2, 3, 30, '2023-10-25', '2023-10-28', 'Shipped');
+
+-- Isi tabel Payment
+INSERT INTO Payment (OrderID, Paid, Total, Details)
+VALUES
+    (1, true, 20, 'Credit Card'),
+    (2, true, 30, 'PayPal');
+
+

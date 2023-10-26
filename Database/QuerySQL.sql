@@ -22,8 +22,19 @@ CREATE TYPE payment_details_enum AS ENUM (
     'Cash'
 );
 
--- CREATE TABLE Account (
---     AccoundID BIGSERIAL PRIMARY KEY NOT NULL,
+CREATE TABLE Account (
+    AccoundID BIGSERIAL PRIMARY KEY NOT NULL,
+    Name VARCHAR(255),
+    Email VARCHAR(255) UNIQUE,
+    Password VARCHAR(255) UNIQUE,
+    Address VARCHAR(255),
+    Phone INT UNIQUE,
+    Role user_role
+);
+
+-- -- Tabel "Account_Traders"
+-- CREATE TABLE Account_Traders (
+--     TradersID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
 --     Name VARCHAR(255),
 --     Email VARCHAR(255) UNIQUE,
 --     Password VARCHAR(255) UNIQUE,
@@ -32,27 +43,16 @@ CREATE TYPE payment_details_enum AS ENUM (
 --     Role user_role
 -- );
 
--- Tabel "Account_Traders"
-CREATE TABLE Account_Traders (
-    TradersID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
-    Name VARCHAR(255),
-    Email VARCHAR(255) UNIQUE,
-    Password VARCHAR(255) UNIQUE,
-    Address VARCHAR(255),
-    Phone INT UNIQUE,
-    Role user_role
-);
-
--- Tabel "Account_Fisherman"
-CREATE TABLE Account_Fisherman (
-    FishermanID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
-    Name VARCHAR(255),
-    Email VARCHAR(255) UNIQUE,
-    Password VARCHAR(255) UNIQUE,
-    Address VARCHAR(255),
-    Phone INT UNIQUE,
-    Role user_role
-);
+-- -- Tabel "Account_Fisherman"
+-- CREATE TABLE Account_Fisherman (
+--     FishermanID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
+--     Name VARCHAR(255),
+--     Email VARCHAR(255) UNIQUE,
+--     Password VARCHAR(255) UNIQUE,
+--     Address VARCHAR(255),
+--     Phone INT UNIQUE,
+--     Role user_role
+-- );
 
 -- CREATE TABLE Chat (
 --     ChatID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
@@ -69,11 +69,9 @@ CREATE TABLE Product (
     ProductID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
     ProductName VARCHAR(255),
     ProductCost INT,
-    FOREIGN KEY (FishermanID) REFERENCES Account_Fisherman (FishermanID),
-    FOREIGN KEY (TradersID) REFERENCES Account_Traders (TradersID),
-    -- FOREIGN KEY (AccoundID) REFERENCES Account (AccoundID),
+    FOREIGN KEY (AccoundID) REFERENCES Account (AccoundID),
     PostedDate DATE,
-    ProductIMG bytea, --labil
+    ProductIMG bytea, 
     Description VARCHAR(255),
     CatchDate DATE
 );
@@ -82,17 +80,13 @@ CREATE TABLE Product (
 CREATE TABLE Shopping_Cart (
     ShoppingCartID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
     Created DATE,
-    FOREIGN KEY (TradersID) REFERENCES Account_Traders (TradersID),
-    -- FOREIGN KEY (AccoundID) REFERENCES Account (AccoundID),
-    FOREIGN KEY (ProductID) REFERENCES Product (ProductID)
+    FOREIGN KEY (AccoundID) REFERENCES Account (AccoundID)
 );
 
 -- Tabel "Reviews"
 CREATE TABLE Reviews (
     ReviewID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
-    FOREIGN KEY (TradersID) REFERENCES Account_Traders (TradersID),
-    -- FOREIGN KEY (AccoundID) REFERENCES Account (AccoundID),
-    FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
+    FOREIGN KEY (AccoundID) REFERENCES Account (AccoundID),
     ReviewContent VARCHAR(255),
     Rating INT
 );
@@ -100,9 +94,7 @@ CREATE TABLE Reviews (
 -- Tabel "Orders"
 CREATE TABLE Orders (
     OrderID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
-    FOREIGN KEY (TradersID) REFERENCES Account_Traders (TradersID),
-    FOREIGN KEY (FishermanID) REFERENCES Account_Fisherman (FishermanID),
-    -- FOREIGN KEY (AccoundID) REFERENCES Account (AccoundID),
+    FOREIGN KEY (AccoundID) REFERENCES Account (AccoundID),
     FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
     TotalAmount DECIMAL,
     OrderDate DATE,

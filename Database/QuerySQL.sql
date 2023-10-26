@@ -54,6 +54,16 @@ CREATE TABLE Account_Fisherman (
     Role user_role
 );
 
+-- CREATE TABLE Chat (
+--     ChatID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
+--     SenderID BIGINT, -- ID pengirim pesan
+--     ReceiverID BIGINT, -- ID penerima pesan
+--     Message TEXT, -- Isi pesan
+--     Timestamp TIMESTAMP, -- Waktu pengiriman pesan
+--     FOREIGN KEY (SenderID) REFERENCES Account_Fisherman (FishermanID),
+--     FOREIGN KEY (ReceiverID) REFERENCES Account_Traders (TradersID)
+-- );
+
 -- Tabel "Product"
 CREATE TABLE Product (
     ProductID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,

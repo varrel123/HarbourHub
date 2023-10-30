@@ -85,10 +85,27 @@ async function deleteUser (mm){
     }
 }
 
+async function UpdateAccount (mm){
+  const {accountid, Name, Email, Password, Address, Phone, Role } = mm;
+  const pass = await helper.hashPassword(Password);
+  const query = `UPDATE Account SET accountid = '${accountid}', Name = '${Name}' , Email = '${Email}',Password = '${pass}',Address = '${Address}',Phone = '${Phone}',Role = '${Role}' WHERE accountid = '${accountid}' `;
+  const result = await db.query(query);
+  if(result.rowCount === 1){
+      return {
+          message: 'Update account successful'
+      }
+  }else{
+      return{
+          message: 'Error'
+      } 
+  }
+}
+
 module.exports = {
     loginFisherman,
     loginTraders,
     register,
     showUser,
+    UpdateAccount,
     deleteUser
 }

@@ -12,4 +12,6 @@ router.get('/showaccount', HBController.showUser);
 
 router.delete('/deleteaccount', HBController.deleteUser);
 
+router.put("/updateaccount", HBController.UpdateAccount);
+
 module.exports = router;

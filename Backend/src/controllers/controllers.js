@@ -45,10 +45,20 @@ async function deleteUser(req,res){
     }
 }
 
+async function UpdateAccount(req,res){
+    try{
+        const result = await HBService.UpdateAccount(req.body);
+        res.json(result);
+    }catch(err){
+        res.json(err.detail);
+    }
+}
+
 module.exports = {
     loginFisherman,
     loginTraders,
     register,
     showUser,
+    UpdateAccount,
     deleteUser
 }

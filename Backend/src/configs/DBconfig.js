@@ -1,4 +1,5 @@
 const {Client} = require('pg');
+
 const db = new Client({
     user: 'mohammadvarrel23',
     host: 'ep-polished-water-013849.ap-southeast-1.aws.neon.tech',

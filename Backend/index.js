@@ -1,11 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 const session = require('express-session');
 const cors = require('cors');
-const passport = require('passport');
-const local = require('./src/middlewares/local');
-const mmRoute = require('./src/routes/mm.routes');
+const HB_Route = require('./src/routes/routes');
 const store = new session.MemoryStore();
 const app = express();
 
@@ -23,8 +21,6 @@ app.use(session({
     store
     }));
 
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
@@ -36,10 +32,9 @@ app.get('/', (req, res) => {
     }else{
         res.send('Not logged in');
     }
-    //res.json({ message: 'Welcome to the mm backend' }); 
 });
 
-app.use('/mm', mmRoute);
+app.use(HB_Route);
 
 app.listen(port, () => {
     console.log('Server is running on port: ' + port);

@@ -92,12 +92,45 @@ async function UpdateAccount (mm){
   const result = await db.query(query);
   if(result.rowCount === 1){
       return {
-          message: 'Update account successful'
+          message: 'Product account successful'
       }
   }else{
       return{
           message: 'Error'
       } 
+  }
+}
+
+async function AddProduct(mm) {
+  const {productname, productcost, accountid, posteddate, description, catchdate} = mm;
+  const query = `INSERT INTO Product (productname, productcost, accountid, posteddate, description, catchdate) VALUES ('${productname}', '${productcost}', '${accountid}','${posteddate}', '${description}', '${catchdate}')`;
+  console.log(query)
+  const result = await db.query(query);
+  
+  if(result.rowCount === 1){
+    return {
+        message: 'Product Added'
+    }
+}else{
+    return{
+        message: 'Failed'
+    } 
+}
+}
+
+async function ShowProduct() {
+  const query = 'SELECT * FROM Product';
+  const result = await db.query(query);
+
+  if (result.rowCount > 0) {
+    return {
+      message: 'Product found',
+      accounts: result.rows,
+    };
+  } else {
+    return {
+      message: 'No Product Added',
+    };
   }
 }
 
@@ -107,5 +140,7 @@ module.exports = {
     register,
     showUser,
     UpdateAccount,
-    deleteUser
+    deleteUser,
+    AddProduct,
+    ShowProduct
 }

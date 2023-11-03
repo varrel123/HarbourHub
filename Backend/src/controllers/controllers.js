@@ -54,11 +54,31 @@ async function UpdateAccount(req,res){
     }
 }
 
+async function AddProduct(req,res){
+    try{
+        const result = await HBService.AddProduct(req.body);
+        res.json(result);
+    }catch(err){
+        res.json(err.detail);
+    }
+}
+
+async function ShowProduct(req,res){
+    try{
+        const result = await HBService.ShowProduct(req.user);
+        res.json(result);
+    }catch(err){
+        res.json(err);
+    }
+}
+
 module.exports = {
     loginFisherman,
     loginTraders,
     register,
     showUser,
     UpdateAccount,
-    deleteUser
+    deleteUser,
+    AddProduct,
+    ShowProduct
 }

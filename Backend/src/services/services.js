@@ -1,6 +1,6 @@
 const res = require('express/lib/response');
 const db = require('../configs/DBconfig');
-const helper = require('../utils/bcrypt');
+const helper = require('../utils/bcrypt.js');
 
 async function loginFisherman(mm) {
     const { Email, Password } = mm;
@@ -9,6 +9,7 @@ async function loginFisherman(mm) {
     if (result.rowCount > 0) {
         const user = result.rows[0];
         const comparePass = await helper.comparePassword(Password, user.password);
+
         if (comparePass) {
           return { message: 'Login successful', user };
         } else {

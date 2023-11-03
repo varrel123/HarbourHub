@@ -80,5 +80,7 @@ module.exports = {
     UpdateAccount,
     deleteUser,
     AddProduct,
-    ShowProduct
+    ShowProduct,
+    // addProductToCart,
+    deleteUser
 }

@@ -40,6 +40,7 @@ const corsOptions = {
  * @param {boolean} sessionOptions.saveUninitialized - Whether to save an uninitialized session.
  * @param {Object} sessionOptions.store - Session store to save session data (in this case, MemoryStore).
  */
+
 app.use(session({
     secret: 'secret',
     resave: false,

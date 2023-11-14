@@ -17,6 +17,5 @@ router.put("/updateaccount", HBController.UpdateAccount);
 router.post("/addproduct", HBController.AddProduct);
 
 router.get("/showproduct", HBController.ShowProduct);
-// router.post('/addProductToCart', HBController.addProductToCart);
 
 module.exports = router;

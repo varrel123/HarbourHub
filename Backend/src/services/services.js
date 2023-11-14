@@ -2,6 +2,8 @@ const res = require('express/lib/response');
 const db = require('../configs/DBconfig');
 const helper = require('../utils/bcrypt.js');
 
+
+// account
 async function loginFisherman(temp) {
     const { Email, Password } = temp;
     const query = `SELECT * FROM Account WHERE Email = '${Email}' AND Role = 'FisherMan'`;
@@ -102,6 +104,7 @@ async function UpdateAccount (temp){
   }
 }
 
+// product
 async function AddProduct(temp) {
   const { accountid } = temp;
 
@@ -138,8 +141,6 @@ async function AddProduct(temp) {
 }
 
 
-
-
 async function ShowProduct() {
   const query = 'SELECT * FROM Product';
   const result = await db.query(query);
@@ -156,6 +157,48 @@ async function ShowProduct() {
   }
 }
 
+async function DeleteProduct(temp) {
+  const { accountid, productid } = temp;
+
+  try {
+    const accountQuery = `SELECT role FROM Account WHERE accountid = ${accountid}`;
+    const accountResult = await db.query(accountQuery);
+
+    if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'FisherMan') {
+      const productQuery = `SELECT accountid FROM Product WHERE productid = '${productid}'`;
+      const productResult = await db.query(productQuery);
+
+      if (productResult.rowCount === 1 && productResult.rows[0].accountid === accountid) {
+        const deleteQuery = `DELETE FROM product WHERE productid = '${productid}'`;
+        const result = await db.query(deleteQuery);
+
+        if (result.rowCount === 1) {
+          return {
+            message: 'Product Deleted'
+          };
+        } else {
+          return {
+            message: 'Failed to Delete product'
+          };
+        }
+      } else {
+        return {
+          message: 'Unauthorized. You can only delete your own products.'
+        };
+      }
+    } else {
+      return {
+        message: 'Unauthorized. You must have the FisherMan role to delete products.'
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      message: 'Internal Server Error'
+    };
+  }
+}
+
 module.exports = {
     loginFisherman,
     loginTraders,
@@ -164,5 +207,6 @@ module.exports = {
     UpdateAccount,
     deleteUser,
     AddProduct,
-    ShowProduct
-}
+    ShowProduct,
+    DeleteProduct
+};

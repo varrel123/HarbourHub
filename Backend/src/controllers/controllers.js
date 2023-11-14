@@ -72,6 +72,15 @@ async function ShowProduct(req,res){
     }
 }
 
+async function DeleteProduct(req,res){
+    try{
+        const result = await HBService.DeleteProduct(req.body);
+        res.json(result);
+    }catch(err){
+        res.json(err);
+    }
+}
+
 module.exports = {
     loginFisherman,
     loginTraders,
@@ -81,6 +90,5 @@ module.exports = {
     deleteUser,
     AddProduct,
     ShowProduct,
-    // addProductToCart,
-    deleteUser
+    DeleteProduct
 }

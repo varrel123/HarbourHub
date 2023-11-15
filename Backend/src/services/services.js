@@ -2,7 +2,6 @@ const res = require('express/lib/response');
 const db = require('../configs/DBconfig');
 const helper = require('../utils/bcrypt.js');
 
-
 // account
 async function loginFisherman(temp) {
     const { Email, Password } = temp;
@@ -11,7 +10,6 @@ async function loginFisherman(temp) {
     if (result.rowCount > 0) {
         const user = result.rows[0];
         const comparePass = await helper.comparePassword(Password, user.password);
-
         if (comparePass) {
           return { message: 'Login successful', user };
         } else {
@@ -199,6 +197,49 @@ async function DeleteProduct(temp) {
   }
 }
 
+async function UpdateProduct(temp) {
+  const { productname, productcost, accountid, posteddate, description, catchdate, productid } = temp;
+
+  try {
+    const accountQuery = `SELECT role FROM Account WHERE accountid = ${accountid}`;
+    const accountResult = await db.query(accountQuery);
+
+    if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'FisherMan') {
+      const productQuery = `SELECT accountid FROM Product WHERE productid = '${productid}'`;
+      const productResult = await db.query(productQuery);
+
+      if (productResult.rowCount === 1 && productResult.rows[0].accountid === accountid) {
+        const query = `UPDATE Product SET productname = '${productname}', productcost = '${productcost}' ,accountid = '${accountid}', posteddate = '${posteddate}',description = '${description}',catchdate = '${catchdate}' WHERE productid = '${productid}' `;
+        const result = await db.query(query);
+
+        if (result.rowCount === 1) {
+          return {
+            message: 'Product Updated'
+          };
+        } else {
+          return {
+            message: 'Failed to Update product'
+          };
+        }
+      } else {
+        return {
+          message: 'Unauthorized. You can only Update your own products.'
+        };
+      }
+    } else {
+      return {
+        message: 'Unauthorized. You must have the FisherMan role to delete products.'
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      message: 'Internal Server Error'
+    };
+  }
+}
+
+
 module.exports = {
     loginFisherman,
     loginTraders,
@@ -208,5 +249,6 @@ module.exports = {
     deleteUser,
     AddProduct,
     ShowProduct,
-    DeleteProduct
+    DeleteProduct,
+    UpdateProduct
 };

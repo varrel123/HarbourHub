@@ -20,4 +20,6 @@ router.get("/showproduct", HBController.ShowProduct);
 
 router.delete("/deleteproduct", HBController.DeleteProduct);
 
+router.put("/updateproduct", HBController.UpdateProduct);
+
 module.exports = router;

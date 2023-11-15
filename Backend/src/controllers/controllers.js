@@ -81,6 +81,15 @@ async function DeleteProduct(req,res){
     }
 }
 
+async function UpdateProduct(req,res){
+    try{
+        const result = await HBService.UpdateProduct(req.body);
+        res.json(result);
+    }catch(err){
+        res.json(err);
+    }
+}
+
 module.exports = {
     loginFisherman,
     loginTraders,
@@ -90,5 +99,6 @@ module.exports = {
     deleteUser,
     AddProduct,
     ShowProduct,
-    DeleteProduct
-}
+    DeleteProduct,
+    UpdateProduct
+};

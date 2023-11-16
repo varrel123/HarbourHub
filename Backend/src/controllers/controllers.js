@@ -152,6 +152,17 @@ async function UpdateReview(req,res){
         res.json(err);
     }
 }
+
+async function payment(req,res){
+    try{
+        const result = await HBService.payment(req.body);
+        res.json(result);
+    }catch(err){
+        res.json(err);
+    }
+}
+
+
 module.exports = {
     loginFisherman,
     loginTraders,
@@ -169,5 +180,6 @@ module.exports = {
     AddReview,
     ShowReview,
     DeleteReview,
-    UpdateReview
+    UpdateReview,
+    payment
 };

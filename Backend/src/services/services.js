@@ -491,6 +491,49 @@ async function DeleteReview(temp) {
     };
   }
 }
+
+async function payment(temp) {
+  const { accountid } = temp;
+  console.log(temp);
+
+  try {
+    const accountQuery = `SELECT role FROM Account WHERE accountid = ${accountid}`;
+    const accountResult = await db.query(accountQuery);
+
+    if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'Traders') {
+      const {orderid,details} = temp;
+      
+      const query = ` INSERT INTO payment (orderid,total, details) SELECT '${orderid}',
+        (SELECT totalamount FROM Orders WHERE OrderID = '${orderid}') * 
+        (SELECT productcost FROM Product WHERE ProductID = (SELECT ProductID FROM Orders WHERE OrderID = '${orderid}')),
+        '${details}';`;
+
+        console.log('Query:', query);
+
+      const result = await db.query(query);
+      if (result.rowCount === 1) {
+        return {
+          message: 'Payment Added'
+        };
+      } else {
+        return {
+          message: 'Failed to Pay product'
+        };
+      }
+    } else {
+      return {
+        message: 'Unauthorized. You must have the Traders role to Order Payment.'
+      };
+    }
+  } catch (error) {
+    console.error(error)
+    return {
+      message: 'Internal Server Error'
+    };
+  }
+}
+
+
 module.exports = {
     loginFisherman,
     loginTraders,
@@ -508,6 +551,7 @@ module.exports = {
     AddReview,
     ShowReview,
     UpdateReview,
-    DeleteReview
+    DeleteReview,
+    payment
 };
 

@@ -36,4 +36,6 @@ router.put("/updateReview", HBController.UpdateReview);
 
 router.delete("/deleteReview", HBController.DeleteReview);
 
+router.post("/pay", HBController.payment);
+
 module.exports = router;

@@ -79,9 +79,11 @@ CREATE TABLE Product (
 
 -- Tabel "Shopping_Cart"
 CREATE TABLE Shopping_Cart (
-    ShoppingCartID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
+    ShoppingCartID BIGSERIAL PRIMARY KEY NOT,
     Created DATE,
     AccountID BIGSERIAL, -- Kolom untuk kunci asing
+    ProductID BIGSERIAL,
+    FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
     FOREIGN KEY (AccountID) REFERENCES Account(AccountID)
 );
 

@@ -239,6 +239,39 @@ async function UpdateProduct(temp) {
   }
 }
 
+async function Order(temp) {
+  const { accountid } = temp;
+
+  try {
+    const accountQuery = `SELECT role FROM Account WHERE accountid = ${accountid}`;
+    const accountResult = await db.query(accountQuery);
+
+    if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'Traders') {
+      const {accountid , productid , totalamount , orderdate , deliverydate , deliverystatus} = temp;
+      const query = `INSERT INTO orders (accountid, productid, totalamount, orderdate, deliverydate, deliverystatus) VALUES 
+                    ('${accountid}', '${productid}', '${totalamount}','${orderdate}', '${deliverydate}', '${deliverystatus}')`;
+      const result = await db.query(query);
+      if (result.rowCount === 1) {
+        return {
+          message: 'Order Added'
+        };
+      } else {
+        return {
+          message: 'Failed to Order product'
+        };
+      }
+    } else {
+      return {
+        message: 'Unauthorized. You must have the Traders role to Order products.'
+      };
+    }
+  } catch (error) {
+    console.error(error)
+    return {
+      message: 'Internal Server Error'
+    };
+  }
+}
 
 module.exports = {
     loginFisherman,
@@ -250,5 +283,7 @@ module.exports = {
     AddProduct,
     ShowProduct,
     DeleteProduct,
-    UpdateProduct
+    UpdateProduct,
+    Order
 };
+

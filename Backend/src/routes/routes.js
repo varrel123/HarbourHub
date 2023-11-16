@@ -24,4 +24,8 @@ router.put("/updateproduct", HBController.UpdateProduct);
 
 router.post("/orders", HBController.Order);
 
+router.put("/updateorders", HBController.UpdateOrder);
+
+router.delete("/deleteorders", HBController.DeleteOrder);
+
 module.exports = router;

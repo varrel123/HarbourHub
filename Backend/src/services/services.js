@@ -273,6 +273,91 @@ async function Order(temp) {
   }
 }
 
+async function UpdateOrder(temp) {
+  const {orderid,accountid , productid , totalamount , orderdate , deliverydate , deliverystatus} = temp;
+
+  try {
+    const accountQuery = `SELECT role FROM Account WHERE accountid = ${accountid}`;
+    const accountResult = await db.query(accountQuery);
+
+    if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'Traders') {
+      const productQuery = `SELECT accountid FROM orders WHERE orderid = '${orderid}'`;
+      const productResult = await db.query(productQuery);
+
+      if (productResult.rowCount === 1 && productResult.rows[0].accountid === accountid) {
+        const query = `UPDATE orders SET accountid = '${accountid}', productid = '${productid}' ,totalamount = '${totalamount}', orderdate = '${orderdate}',deliverydate = '${deliverydate}',deliverystatus = '${deliverystatus}' WHERE orderid = '${orderid}' `;
+        const result = await db.query(query);
+
+        if (result.rowCount === 1) {
+          return {
+            message: 'Order Updated'
+          };
+        } else {
+          return {
+            message: 'Failed to Update Order'
+          };
+        }
+      } else {
+        return {
+          message: 'Unauthorized. You can only Order your own products.'
+        };
+      }
+    } else {
+      return {
+        message: 'Unauthorized. You must have the Traders role to Update Order.'
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      message: 'Internal Server Error'
+    };
+  }
+}
+
+async function DeleteOrder(temp) {
+  const {orderid,accountid} = temp;
+
+  try {
+    const accountQuery = `SELECT role FROM Account WHERE accountid = ${accountid}`;
+    const accountResult = await db.query(accountQuery);
+
+    if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'Traders') {
+      const productQuery = `SELECT accountid FROM orders WHERE orderid = '${orderid}'`;
+      const productResult = await db.query(productQuery);
+
+      if (productResult.rowCount === 1 && productResult.rows[0].accountid === accountid) {
+        const query = `DELETE from orders where orderid = '${orderid}'`;
+        const result = await db.query(query);
+
+        if (result.rowCount === 1) {
+          return {
+            message: 'Order Deleted'
+          };
+        } else {
+          return {
+            message: 'Failed to Delete Order'
+          };
+        }
+      } else {
+        return {
+          message: 'Unauthorized. You can only Delete your own orders.'
+        };
+      }
+    } else {
+      return {
+        message: 'Unauthorized. You must have the Traders role to Delete products.'
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      message: 'Internal Server Error'
+    };
+  }
+}
+
+
 module.exports = {
     loginFisherman,
     loginTraders,
@@ -284,6 +369,8 @@ module.exports = {
     ShowProduct,
     DeleteProduct,
     UpdateProduct,
-    Order
+    Order,
+    UpdateOrder,
+    DeleteOrder
 };
 

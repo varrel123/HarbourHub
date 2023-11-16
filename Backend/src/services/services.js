@@ -2,7 +2,9 @@ const res = require('express/lib/response');
 const db = require('../configs/DBconfig');
 const helper = require('../utils/bcrypt.js');
 
-// account
+//===========================================
+//============ account ======================
+//===========================================
 async function loginFisherman(temp) {
     const { Email, Password } = temp;
     const query = `SELECT * FROM Account WHERE Email = '${Email}' AND Role = 'FisherMan'`;
@@ -102,7 +104,9 @@ async function UpdateAccount (temp){
   }
 }
 
-// product
+//===========================================
+//============ Product ======================
+//===========================================
 async function AddProduct(temp) {
   const { accountid } = temp;
 
@@ -239,6 +243,9 @@ async function UpdateProduct(temp) {
   }
 }
 
+//===========================================
+//============ Order=========================
+//===========================================
 async function Order(temp) {
   const { accountid } = temp;
 
@@ -358,7 +365,9 @@ async function DeleteOrder(temp) {
 }
 
 
-//Shoppping Cart
+//=================================================
+//============ Shopping Cart ======================
+//=================================================
 async function AddCart(temp) {
   const { accountid } = temp;
 
@@ -494,8 +503,9 @@ async function UpdateCart(temp) {
   }
 }
 
-//Review
-
+//===========================================
+//============ Review =======================
+//===========================================
 async function AddReview(temp) {
   const { accountid } = temp;
 
@@ -631,6 +641,9 @@ async function DeleteReview(temp) {
   }
 }
 
+//===========================================
+//============ Payment ======================
+//===========================================
 async function payment(temp) {
   const { accountid } = temp;
   console.log(temp);

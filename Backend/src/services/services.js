@@ -357,6 +357,145 @@ async function DeleteOrder(temp) {
   }
 }
 
+
+//Shoppping Cart
+async function AddCart(temp) {
+  const { accountid } = temp;
+
+  try {
+    const accountQuery = `SELECT role FROM Account WHERE accountid = ${accountid}`;
+    const accountResult = await db.query(accountQuery);
+
+    if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'Traders') {
+      const { accountid, created, productid } = temp;
+      const query = `INSERT INTO Shopping_Cart (accountid, created, productid ) VALUES ('${accountid}','${created}', '${productid}')`;
+
+      const result = await db.query(query);
+
+      if (result.rowCount === 1) {
+        return {
+          message: 'Product Added to Cart'
+        };
+      } else {
+        return {
+          message: 'Failed to Add Cart'
+        };
+      }
+    } else {
+      return {
+        message: 'Unauthorized. You must have the Traders role to add products.'
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      message: 'Internal Server Error'
+    };
+  }
+}
+
+async function ShowCart() {
+  const query = 'SELECT * FROM Shopping_Cart';
+  const result = await db.query(query);
+
+  if (result.rowCount > 0) {
+    return {
+      message: 'Product found',
+      accounts: result.rows,
+    };
+  } else {
+    return {
+      message: 'No Product Added to Cart',
+    };
+  }
+}
+
+async function DeleteCart(temp) {
+  const { accountid, productid } = temp;
+
+  try {
+    const accountQuery = `SELECT role FROM Account WHERE accountid = ${accountid}`;
+    const accountResult = await db.query(accountQuery);
+
+    if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'Traders') {
+      const productQuery = `SELECT accountid FROM Shopping_Cart WHERE productid = '${productid}'`;
+      const productResult = await db.query(productQuery);
+
+      if (productResult.rowCount === 1 && productResult.rows[0].accountid === accountid) {
+        const deleteQuery = `DELETE FROM Shopping_Cart WHERE productid = '${productid}'`;
+        const result = await db.query(deleteQuery);
+
+        if (result.rowCount === 1) {
+          return {
+            message: 'Cart Deleted'
+          };
+        } else {
+          return {
+            message: 'Failed to Delete Product from Cart'
+          };
+        }
+      } else {
+        return {
+          message: 'Unauthorized. You can only delete your own Cart.'
+        };
+      }
+    } else {
+      return {
+        message: 'Unauthorized. You must have the Traders role to delete products.'
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      message: 'Internal Server Error'
+    };
+  }
+}
+
+async function UpdateCart(temp) {
+  const { accountid, Created, productid } = temp;
+
+  try {
+    const accountQuery = `SELECT role FROM Account WHERE accountid = ${accountid}`;
+    const accountResult = await db.query(accountQuery);
+
+    if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'Traders') {
+      const productQuery = `SELECT accountid FROM Shopping_Cart WHERE productid = '${productid}'`;
+      const productResult = await db.query(productQuery);
+
+      if (productResult.rowCount === 1 && productResult.rows[0].accountid === accountid) {
+        const query = `UPDATE Shopping_Cart SET accountid = '${accountid}', Created = '${Created}', productid = '${productid}' `;
+        const result = await db.query(query);
+
+        if (result.rowCount === 1) {
+          return {
+            message: 'Cart Updated'
+          };
+        } else {
+          return {
+            message: 'Failed to Update Cart'
+          };
+        }
+      } else {
+        return {
+          message: 'Unauthorized. You can only Update your own cart.'
+        };
+      }
+    } else {
+      return {
+        message: 'Unauthorized. You must have the Traders role to delete products.'
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      message: 'Internal Server Error'
+    };
+  }
+}
+
+//Review
+
 async function AddReview(temp) {
   const { accountid } = temp;
 
@@ -548,6 +687,10 @@ module.exports = {
     Order,
     UpdateOrder,
     DeleteOrder,
+    AddCart,
+    ShowCart,
+    DeleteCart,
+    UpdateCart,
     AddReview,
     ShowReview,
     UpdateReview,

@@ -116,6 +116,41 @@ async function DeleteOrder(req,res){
         res.json(err);
     }
 }
+async function AddCart(req,res){
+    try{
+        const result = await HBService.AddCart(req.body);
+        res.json(result);
+    }catch(err){
+        res.json(err.detail);
+    }
+}
+
+async function ShowCart(req,res){
+    try{
+        const result = await HBService.ShowCart(req.user);
+        res.json(result);
+    }catch(err){
+        res.json(err);
+    }
+}
+
+async function DeleteCart(req,res){
+    try{
+        const result = await HBService.DeleteCart(req.body);
+        res.json(result);
+    }catch(err){
+        res.json(err);
+    }
+}
+
+async function UpdateCart(req,res){
+    try{
+        const result = await HBService.UpdateCart(req.body);
+        res.json(result);
+    }catch(err){
+        res.json(err);
+    }
+}
 
 async function AddReview(req,res){
     try{
@@ -177,6 +212,10 @@ module.exports = {
     Order,
     UpdateOrder,
     DeleteOrder,
+    AddCart,
+    ShowCart,
+    DeleteCart,
+    UpdateCart,
     AddReview,
     ShowReview,
     DeleteReview,

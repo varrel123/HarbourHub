@@ -28,6 +28,14 @@ router.put("/updateorders", HBController.UpdateOrder);
 
 router.delete("/deleteorders", HBController.DeleteOrder);
 
+router.post("/addcart", HBController.AddCart);
+
+router.get("/showcart", HBController.ShowCart);
+
+router.delete("/deletecart", HBController.DeleteCart);
+
+router.put("/updatecart", HBController.UpdateCart);
+
 router.post("/addReview", HBController.AddReview);
 
 router.get("/showReview", HBController.ShowReview);

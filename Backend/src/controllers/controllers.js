@@ -117,6 +117,41 @@ async function DeleteOrder(req,res){
     }
 }
 
+async function AddReview(req,res){
+    try{
+        const result = await HBService.AddReview(req.body);
+        res.json(result);
+    }catch(err){
+        res.json(err.detail);
+    }
+}
+
+async function ShowReview(req,res){
+    try{
+        const result = await HBService.ShowReview(req.user);
+        res.json(result);
+    }catch(err){
+        res.json(err);
+    }
+}
+
+async function DeleteReview(req,res){
+    try{
+        const result = await HBService.DeleteReview(req.body);
+        res.json(result);
+    }catch(err){
+        res.json(err);
+    }
+}
+
+async function UpdateReview(req,res){
+    try{
+        const result = await HBService.UpdateReview(req.body);
+        res.json(result);
+    }catch(err){
+        res.json(err);
+    }
+}
 module.exports = {
     loginFisherman,
     loginTraders,
@@ -130,5 +165,9 @@ module.exports = {
     UpdateProduct,
     Order,
     UpdateOrder,
-    DeleteOrder
+    DeleteOrder,
+    AddReview,
+    ShowReview,
+    DeleteReview,
+    UpdateReview
 };

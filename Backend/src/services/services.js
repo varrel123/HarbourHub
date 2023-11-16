@@ -357,7 +357,140 @@ async function DeleteOrder(temp) {
   }
 }
 
+async function AddReview(temp) {
+  const { accountid } = temp;
 
+  try {
+    const accountQuery = `SELECT role FROM Account WHERE accountid = ${accountid}`;
+    const accountResult = await db.query(accountQuery);
+
+    if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'Traders') {
+      const { accountid, productid, reviewcontent, rating } = temp;
+      const query = `INSERT INTO Reviews (accountid, productid, reviewcontent, rating) VALUES ('${accountid}', '${productid}', '${reviewcontent}','${rating}')`;
+
+      const result = await db.query(query);
+
+      if (result.rowCount === 1) {
+        return {
+          message: 'Review Added'
+        };
+      } else {
+        return {
+          message: 'Failed to add Review'
+        };
+      }
+    } else {
+      return {
+        message: 'Unauthorized. You must have the Traders role to add Reviews.'
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      message: 'Internal Server Error'
+    };
+  }
+}
+
+async function ShowReview() {
+  const query = 'SELECT * FROM reviews';
+  const result = await db.query(query);
+
+  if (result.rowCount > 0) {
+    return {
+      message: 'Review found',
+      accounts: result.rows,
+    };
+  } else {
+    return {
+      message: 'No Review Added',
+    };
+  }
+}
+
+async function UpdateReview(temp) {
+  const { accountid, productid, reviewcontent, rating, reviewid } = temp;
+
+  try {
+    const accountQuery = `SELECT role FROM Account WHERE accountid = ${accountid}`;
+    const accountResult = await db.query(accountQuery);
+
+    if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'Traders') {
+      const productQuery = `SELECT accountid FROM Reviews WHERE reviewid = '${reviewid}'`;
+      const productResult = await db.query(productQuery);
+
+      if (productResult.rowCount === 1 && productResult.rows[0].accountid === accountid) {
+        const query = `UPDATE Reviews SET accountid = '${accountid}', productid = '${productid}', reviewcontent = '${reviewcontent}',rating = '${rating}' WHERE reviewid = '${reviewid}' `;
+        const result = await db.query(query);
+
+        if (result.rowCount === 1) {
+          return {
+            message: 'Review Updated'
+          };
+        } else {
+          return {
+            message: 'Failed to Update Review'
+          };
+        }
+      } else {
+        return {
+          message: 'Unauthorized. You can only update your own Review.'
+        };
+      }
+    } else {
+      return {
+        message: 'Unauthorized. You must have the Traders role to delete Reviews.'
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      message: 'Internal Server Error'
+    };
+  }
+}
+
+async function DeleteReview(temp) {
+  const { accountid, reviewid } = temp;
+
+  try {
+    const accountQuery = `SELECT role FROM Account WHERE accountid = ${accountid}`;
+    const accountResult = await db.query(accountQuery);
+
+    if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'Traders') {
+      const productQuery = `SELECT accountid FROM Reviews WHERE reviewid = '${reviewid}'`;
+      const productResult = await db.query(productQuery);
+
+      if (productResult.rowCount === 1 && productResult.rows[0].accountid === accountid) {
+        const deleteQuery = `DELETE FROM Reviews WHERE reviewid = '${reviewid}'`;
+        const result = await db.query(deleteQuery);
+
+        if (result.rowCount === 1) {
+          return {
+            message: 'Product Deleted'
+          };
+        } else {
+          return {
+            message: 'Failed to Delete product'
+          };
+        }
+      } else {
+        return {
+          message: 'Unauthorized. You can only delete your own Review.'
+        };
+      }
+    } else {
+      return {
+        message: 'Unauthorized. You must have the Traders role to delete Review.'
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      message: 'Internal Server Error'
+    };
+  }
+}
 module.exports = {
     loginFisherman,
     loginTraders,
@@ -371,6 +504,10 @@ module.exports = {
     UpdateProduct,
     Order,
     UpdateOrder,
-    DeleteOrder
+    DeleteOrder,
+    AddReview,
+    ShowReview,
+    UpdateReview,
+    DeleteReview
 };
 

@@ -28,4 +28,12 @@ router.put("/updateorders", HBController.UpdateOrder);
 
 router.delete("/deleteorders", HBController.DeleteOrder);
 
+router.post("/addReview", HBController.AddReview);
+
+router.get("/showReview", HBController.ShowReview);
+
+router.put("/updateReview", HBController.UpdateReview);
+
+router.delete("/deleteReview", HBController.DeleteReview);
+
 module.exports = router;

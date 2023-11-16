@@ -89,6 +89,8 @@ CREATE TABLE Shopping_Cart (
 CREATE TABLE Reviews (
     ReviewID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
     AccountID BIGSERIAL, -- Kolom untuk kunci asing
+    ProductID BIGSERIAL, 
+    FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
     FOREIGN KEY (AccountID) REFERENCES Account (AccountID),
     ReviewContent VARCHAR(255),
     Rating INT

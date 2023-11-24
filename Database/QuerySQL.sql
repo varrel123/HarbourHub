@@ -28,48 +28,16 @@ CREATE TABLE Account (
     Email VARCHAR(255) UNIQUE,
     Password VARCHAR(255),
     Address VARCHAR(255),
-    Phone INT UNIQUE,
+    Phone BIGINT UNIQUE,
     Role user_role
 );
-
--- -- Tabel "Account_Traders"
--- CREATE TABLE Account_Traders (
---     TradersID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
---     Name VARCHAR(255),
---     Email VARCHAR(255) UNIQUE,
---     Password VARCHAR(255) UNIQUE,
---     Address VARCHAR(255),
---     Phone INT UNIQUE,
---     Role user_role
--- );
-
--- -- Tabel "Account_Fisherman"
--- CREATE TABLE Account_Fisherman (
---     FishermanID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
---     Name VARCHAR(255),
---     Email VARCHAR(255) UNIQUE,
---     Password VARCHAR(255) UNIQUE,
---     Address VARCHAR(255),
---     Phone INT UNIQUE,
---     Role user_role
--- );
-
--- CREATE TABLE Chat (
---     ChatID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
---     SenderID BIGINT, -- ID pengirim pesan
---     ReceiverID BIGINT, -- ID penerima pesan
---     Message TEXT, -- Isi pesan
---     Timestamp TIMESTAMP, -- Waktu pengiriman pesan
---     FOREIGN KEY (SenderID) REFERENCES Account_Fisherman (FishermanID),
---     FOREIGN KEY (ReceiverID) REFERENCES Account_Traders (TradersID)
--- );
 
 -- Tabel "Product"
 CREATE TABLE Product (
     ProductID BIGSERIAL PRIMARY KEY UNIQUE,
     ProductName VARCHAR(255),
     ProductCost INT,
-    AccountID BIGSERIAL, -- Kolom untuk kunci asing
+    AccountID BIGSERIAL, 
     FOREIGN KEY (AccountID) REFERENCES Account(AccountID),
     PostedDate DATE,
     -- ProductIMG bytea, 
@@ -81,7 +49,7 @@ CREATE TABLE Product (
 CREATE TABLE Shopping_Cart (
     ShoppingCartID BIGSERIAL PRIMARY KEY,
     Created DATE,
-    AccountID BIGSERIAL, -- Kolom untuk kunci asing
+    AccountID BIGSERIAL, 
     ProductID BIGSERIAL,
     FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
     FOREIGN KEY (AccountID) REFERENCES Account(AccountID)
@@ -90,7 +58,7 @@ CREATE TABLE Shopping_Cart (
 -- Tabel "Reviews"
 CREATE TABLE Reviews (
     ReviewID BIGSERIAL PRIMARY KEY,
-    AccountID BIGSERIAL, -- Kolom untuk kunci asing
+    AccountID BIGSERIAL, 
     ProductID BIGSERIAL, 
     FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
     FOREIGN KEY (AccountID) REFERENCES Account (AccountID),

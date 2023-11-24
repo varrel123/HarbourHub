@@ -32,8 +32,6 @@ CREATE TABLE Account (
     Role user_role
 );
 
-
-
 -- Tabel "Product"
 CREATE TABLE Product (
     ProductID BIGSERIAL PRIMARY KEY UNIQUE,
@@ -51,7 +49,7 @@ CREATE TABLE Product (
 CREATE TABLE Shopping_Cart (
     ShoppingCartID BIGSERIAL PRIMARY KEY,
     Created DATE,
-    AccountID BIGSERIAL, -- Kolom untuk kunci asing
+    AccountID BIGSERIAL, 
     ProductID BIGSERIAL,
     FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
     FOREIGN KEY (AccountID) REFERENCES Account(AccountID)
@@ -60,7 +58,7 @@ CREATE TABLE Shopping_Cart (
 -- Tabel "Reviews"
 CREATE TABLE Reviews (
     ReviewID BIGSERIAL PRIMARY KEY,
-    AccountID BIGSERIAL, -- Kolom untuk kunci asing
+    AccountID BIGSERIAL, 
     ProductID BIGSERIAL, 
     FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
     FOREIGN KEY (AccountID) REFERENCES Account (AccountID),
@@ -130,6 +128,3 @@ INSERT INTO Payment (PaymentID, OrderID, Paid, Total, Details)
 VALUES
     (1, 1, true, 20, 'Credit Card'),
     (2, 2, true, 30, 'PayPal');
-
-
-

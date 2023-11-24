@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const LoginPage = () => {
   const navigation = useNavigation();
+  const route = useRoute(); // Get the route
+  const [role, setRole] = useState(''); // Initialize role state
+
+  useEffect(() => {
+    if (route.params && route.params.role) {
+      setRole(route.params.role); // Set the role from the route parameters
+    }
+  }, [route.params]);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 

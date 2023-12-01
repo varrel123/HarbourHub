@@ -7,6 +7,8 @@ import LoginPage from './login';
 import RegistrationPage from './register';
 import WelcomePage from './welcome';
 import SelectRolePage from './selectRole';
+import HomeNelayan from './homeNelayan';
+import AddProduct from './addProduct';
 
 const Stack = createStackNavigator();
 
@@ -18,6 +20,8 @@ export default function App() {
         <Stack.Screen name="Welcome" component={WelcomePage} />
         <Stack.Screen name="Login" component={LoginPage} />
         <Stack.Screen name="register" component={RegistrationPage} />
+        <Stack.Screen name="homeNelayan" component={HomeNelayan} />
+        <Stack.Screen name="AddProduct" component={AddProduct} />
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>

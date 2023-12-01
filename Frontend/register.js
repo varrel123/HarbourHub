@@ -8,9 +8,10 @@ const RegistrationPage = () => {
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
-
+  const [password, setPassword] = useState('');
+  
   const handleRegistration = () => {
-    if (name && email && address && phone) {
+    if (name && email && address && phone && password) { // Update this line
       // Navigate back to the Login screen
       navigation.navigate('Login');
     } else {
@@ -40,6 +41,13 @@ const RegistrationPage = () => {
           placeholder="Email"
           keyboardType="email-address"
           autoCapitalize="none"
+        />
+        <TextInput
+          style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 16, paddingLeft: 10, borderRadius: 8 }}
+          onChangeText={setPassword}
+          value={password}
+          placeholder="Password"
+          secureTextEntry={true}
         />
         <TextInput
           style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 16, paddingLeft: 10, borderRadius: 8 }}

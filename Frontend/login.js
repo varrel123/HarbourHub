@@ -19,7 +19,7 @@ const LoginPage = () => {
   const handleLogin = () => {
     if (email && password) {
       // Navigate back to the Login screen
-      navigation.navigate('home');
+      navigation.navigate('homeNelayan');
     } else {
       // Show an error message
       alert('Please fill in all fields.');

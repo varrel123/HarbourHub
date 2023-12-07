@@ -3,12 +3,14 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import LoginPage from './login';
+import {LoginFisherman,LoginTrader} from './login';
 import RegistrationPage from './register';
 import { SelectRole, WelcomePage } from './selectRole';
 import HomeNelayan from './homeNelayan';
 import { AddProduct, EditProduct } from './addProduct';
 import ProductDetails from './productDetails';
+import Account from './account';
+
 
 const Stack = createStackNavigator();
 
@@ -18,12 +20,14 @@ export default function App() {
       <Stack.Navigator initialRouteName="Welcome">
         <Stack.Screen name="SelectRole" component={SelectRole} />
         <Stack.Screen name="Welcome" component={WelcomePage} />
-        <Stack.Screen name="Login" component={LoginPage} />
+        <Stack.Screen name="LoginFisherman" component={LoginFisherman} /> 
+        <Stack.Screen name="LoginTrader" component={LoginTrader} />
         <Stack.Screen name="register" component={RegistrationPage} />
         <Stack.Screen name="homeNelayan" component={HomeNelayan} />
         <Stack.Screen name="AddProduct" component={AddProduct} />
         <Stack.Screen name="EditProduct" component={EditProduct} />
         <Stack.Screen name="ProductDetails" component={ProductDetails} />
+        <Stack.Screen name="Account" component={Account} />
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>

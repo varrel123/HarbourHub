@@ -6,21 +6,21 @@ const helper = require('../utils/bcrypt.js');
 //============ account ======================
 //===========================================
 async function loginFisherman(temp) {
-    const { Email, Password } = temp;
-    const query = `SELECT * FROM Account WHERE Email = '${Email}' AND Role = 'FisherMan'`;
-    const result = await db.query(query);
-    if (result.rowCount > 0) {
-        const user = result.rows[0];
-        const comparePass = await helper.comparePassword(Password, user.password);
-        if (comparePass) {
-          return { message: 'Login successful', user };
-        } else {
-          return { message: 'Password is not correct' };
-        }
+  const { Email, Password } = temp;
+  const query = `SELECT * FROM Account WHERE Email = '${Email}' AND Role = 'FisherMan'`;
+  const result = await db.query(query);
+  if (result.rowCount > 0) {
+    const user = result.rows[0];
+    const comparePass = await helper.comparePassword(Password, user.password);
+    if (comparePass) {
+      return { status: 200, message: 'Login successful', user };
     } else {
-        return { message: 'Account not found' };
+      return { status: 401, message: 'Password is not correct' };
     }
+  } else {
+    return { status: 404, message: 'Account not found' };
   }
+}
 
   async function loginTraders(temp) {
     const { Email, Password } = temp;

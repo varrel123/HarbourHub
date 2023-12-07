@@ -22,11 +22,11 @@ const WelcomePage = () => {
 
 const SelectRole = ({ navigation }) => {
   const handleNelayanPress = () => {
-    navigation.navigate('Login', { role: 'Nelayan' });
+    navigation.navigate('LoginFisherman');
   };
 
   const handlePedagangIkanPress = () => {
-    navigation.navigate('Login', { role: 'Pedagang Ikan' });
+    navigation.navigate('LoginTrader');
   };
 
   return (

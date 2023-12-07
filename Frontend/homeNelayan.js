@@ -14,8 +14,13 @@ import { AntDesign } from '@expo/vector-icons';
     }));
 
     const navigateToAddProduct = () => {
-      console.log('Navigating to AddProduct screen...');
+      console.log('Navigating to AddProduct...');
       navigation.navigate('AddProduct'); // Navigate to the AddProduct screen
+    };
+
+    const navigateToAccount = () => {
+      console.log('Navigating to Account...');
+      navigation.navigate('Account'); // Navigate to the AddProduct screen
     };
 
     const navigateToProductDetails = (productId) => {
@@ -48,7 +53,7 @@ import { AntDesign } from '@expo/vector-icons';
       <TouchableOpacity style={styles.bottomNavButton} onPress={navigateToAddProduct}>
         <AntDesign name="plus" size={24} color='#3780D1' />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.bottomNavButton} onPress={() => {}}>
+      <TouchableOpacity style={styles.bottomNavButton} onPress={navigateToAccount}>
         <AntDesign name="user" size={24} color='#3780D1' />
       </TouchableOpacity>
       </View>

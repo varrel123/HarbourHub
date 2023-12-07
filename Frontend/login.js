@@ -19,7 +19,7 @@ const LoginFisherman = () => {
 
   const handleLogin = async () => {
     if (Email && Password) {
-      const response = await axios.post('http://192.168.0.137:5000/loginFisherMan', { Email, Password })
+      const response = await axios.post('http://192.168.1.6:5000/loginFisherMan', { Email, Password })
         .then(function (response) {
           console.log(response);
           if (response.status === 200) {
@@ -101,7 +101,7 @@ const LoginTrader = () => {
 
   const handleLogin = async () => {
     if (Email && Password) {
-      const response = await axios.post('http://192.168.0.137:5000/loginTraders', { Email, Password })
+      const response = await axios.post('http://192.168.1.6:5000/loginTraders', { Email, Password })
         .then(function (response) {
           console.log(response);
           if (response.status === 200) {

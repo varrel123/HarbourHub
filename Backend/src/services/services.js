@@ -30,12 +30,12 @@ async function loginFisherman(temp) {
         const user = result.rows[0];
         const comparePass = await helper.comparePassword(Password, user.password);
         if (comparePass) {
-          return { message: 'Login successful', user };
+          return { status: 200, message: 'Login successful', user };
         } else {
-          return { message: 'Password is not correct' };
+          return { status: 401, message: 'Password is not correct' };
         }
     } else {
-        return { message: 'Account not found' };
+      return { status: 404, message: 'Account not found' };
     }
   }
   
@@ -63,11 +63,11 @@ async function register (temp){
     const result = await db.query(query);
     if(result.rowCount === 1){
         return {
-            message: 'Account Created'
+          status: 200, message: 'Register successful'        
         }
     }else{
         return{
-            message: 'Error'
+          status: 404, message: 'Register Failed'        
         } 
     }
 }
@@ -115,18 +115,18 @@ async function AddProduct(temp) {
     const accountResult = await db.query(accountQuery);
 
     if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'FisherMan') {
-      const { productname, productcost, accountid, posteddate, description, catchdate } = temp;
-      const query = `INSERT INTO Product (productname, productcost, accountid, posteddate, description, catchdate) VALUES ('${productname}', '${productcost}', '${accountid}','${posteddate}', '${description}', '${catchdate}')`;
+      const { productname, productcost, accountid, posteddate, description, catchdate,productimg } = temp;
+      const query = `INSERT INTO Product (productname, productcost, accountid, posteddate, description, catchdate,productimg) VALUES ('${productname}', '${productcost}', '${accountid}','${posteddate}', '${description}', '${catchdate}','${productimg}')`;
 
       const result = await db.query(query);
 
       if (result.rowCount === 1) {
         return {
-          message: 'Product Added'
+          status: 200, message: 'Product Added'
         };
       } else {
         return {
-          message: 'Failed to add product'
+          status: 404, message: 'Failed to add product'
         };
       }
     } else {

@@ -9,8 +9,6 @@ import { SelectRole, WelcomePage } from './selectRole';
 import HomeNelayan from './homeNelayan';
 import { AddProduct, EditProduct } from './addProduct';
 import ProductDetails from './productDetails';
-import Account from './account';
-
 
 const Stack = createStackNavigator();
 
@@ -27,7 +25,6 @@ export default function App() {
         <Stack.Screen name="AddProduct" component={AddProduct} />
         <Stack.Screen name="EditProduct" component={EditProduct} />
         <Stack.Screen name="ProductDetails" component={ProductDetails} />
-        <Stack.Screen name="Account" component={Account} />
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>

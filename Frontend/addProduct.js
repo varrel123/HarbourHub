@@ -2,20 +2,41 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { AntDesign } from '@expo/vector-icons'; // Import the AntDesign icon library
+import DateTimePicker from '@react-native-community/datetimepicker'; //npm install @react-native-community/datetimepicker
+import axios from 'axios';
 
 const AddProduct = ({ navigation }) => {
-    const [productName, setProductName] = useState('');
-    const [productCost, setProductCost] = useState(0); // Assuming product cost is an integer
-    const [productImage, setProductImage] = useState(null); // Assuming product image is a PNG file
+    const [productname, setProductName] = useState('');
+    const [productcost, setProductCost] = useState(0); // Assuming product cost is an integer
+    const [productimg, setProductImage] = useState(null);
     const [description, setDescription] = useState('');
+    const [accountid, setAccountID] = useState('');
+    const [catchdate, setCatchDate] = useState(new Date());
+    const [posteddate, setPostedDate] = useState(new Date());
 
-    const handleAddProduct = () => {
-        navigation.navigate('ProductDetails', {
-            productName: productName,
-            productCost: productCost,
-            productImage: productImage,
-            description: description,
-          });
+    const handleAddProduct = async () => {
+        if (productname && productcost && description && accountid && posteddate && catchdate && productimg) {
+            const response = await axios.post('http://192.168.1.6:5000/addproduct', { productname, productcost, accountid, posteddate, description, catchdate, productimg })
+                .then(function (response) {
+                    console.log(response);
+                    if (response.status === 200) {
+                        if (response.data.message === 'Product Added') {
+                            alert('Add product successful!');
+                            navigation.navigate('homeNelayan');
+                        } else {
+                            alert(response.data.message);
+                        }
+                    } else if (response.status === 404) {
+                        alert('Add product Failed!');
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    alert('Add product failed. Please try again.');
+                });
+        } else {
+            alert('Please fill in all fields.');
+        }
     };
 
     const pickImage = async () => {
@@ -47,21 +68,21 @@ const AddProduct = ({ navigation }) => {
                 <TextInput
                     style={styles.input}
                     onChangeText={setProductName}
-                    value={productName}
+                    value={productname}
                 />
                 <Text>Product Cost:</Text>
                 <TextInput
                     style={styles.input}
                     onChangeText={setProductCost}
-                    value={productCost.toString()}
+                    value={productcost.toString()}
                     keyboardType="numeric"
                 />
                 <Text>Product Image:</Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <TouchableOpacity style={styles.pickImageButton} onPress={pickImage}>
-                        <Text style={{color:'white'}}>Pick Image</Text>
+                        <Text style={{ color: 'white' }}>Pick Image</Text>
                     </TouchableOpacity>
-                    {productImage && <Image source={{ uri: productImage }} />}
+                    {productimg && <Image source={{ uri: productimg }} />}
                 </View>
                 <Text>Description:</Text>
                 <TextInput
@@ -70,13 +91,50 @@ const AddProduct = ({ navigation }) => {
                     value={description}
                     multiline={true}
                 />
+                <Text>Account ID:</Text>
+                <TextInput
+                    style={[styles.input, { height: 80 }]}
+                    onChangeText={setAccountID}
+                    value={accountid}
+                    keyboardType="numeric"
+                />
+                <Text>Catch Date:</Text>
+                <DateTimePicker
+                    style={{ width: 200 }}
+                    onChangeText={setCatchDate}
+                    value={catchdate}
+                    mode="date"
+                    placeholder="select date"
+                    format="YYYY-MM-DD"
+                    minDate="2016-05-01"
+                    maxDate="2016-06-01"
+                    confirmBtnText="Confirm"
+                    cancelBtnText="Cancel"
+                    onDateChange={(date) => { setDate(date) }}
+                />
+                <Text>Posted Date:</Text>
+                <DateTimePicker
+                    style={{ width: 200 }}
+                    onChangeText={setPostedDate}
+                    value={posteddate}
+                    mode="date"
+                    placeholder="select date"
+                    format="YYYY-MM-DD"
+                    minDate="2016-05-01"
+                    maxDate="2016-06-01"
+                    confirmBtnText="Confirm"
+                    cancelBtnText="Cancel"
+                    onDateChange={(date) => { setDate(date) }}
+                />
             </View>
             <TouchableOpacity style={[styles.addButton, { paddingHorizontal: 20 }]} onPress={handleAddProduct}>
-                <Text style={{color:'white'}}>Add Product</Text>
+                <Text style={{ color: 'white' }}>Add Product</Text>
             </TouchableOpacity>
         </View>
     );
 };
+
+
 const EditProduct = ({ navigation }) => {
     const [productName, setProductName] = useState('');
     const [productCost, setProductCost] = useState(0); // Assuming product cost is an integer
@@ -130,7 +188,7 @@ const EditProduct = ({ navigation }) => {
                 <Text>Product Image:</Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <TouchableOpacity style={styles.pickImageButton} onPress={pickImage}>
-                        <Text style={{color:'white'}}>Pick Image</Text>
+                        <Text style={{ color: 'white' }}>Pick Image</Text>
                     </TouchableOpacity>
                     {productImage && <Image source={{ uri: productImage }} />}
                 </View>
@@ -143,7 +201,7 @@ const EditProduct = ({ navigation }) => {
                 />
             </View>
             <TouchableOpacity style={[styles.addButton, { paddingHorizontal: 20 }]} onPress={handleEditProduct}>
-                <Text style={{color:'white'}}>Edit Product</Text>
+                <Text style={{ color: 'white' }}>Edit Product</Text>
             </TouchableOpacity>
         </View>
     );
@@ -159,7 +217,7 @@ const styles = StyleSheet.create({
         borderBottomColor: '#3780D1',
         paddingHorizontal: 10,
         paddingBottom: 10
-      },
+    },
     navTitle: {
         fontSize: 20,
         fontWeight: 'bold',
@@ -181,7 +239,7 @@ const styles = StyleSheet.create({
         padding: 10,
         marginRight: 10,
         borderRadius: 8,
-        width: 100, 
+        width: 100,
         height: 40,
     },
     addButton: {
@@ -193,7 +251,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         width: 350,
         alignItems: 'center',
-      },
+    },
 });
 
 export { AddProduct, EditProduct };

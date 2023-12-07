@@ -36,13 +36,13 @@ const SelectRole = ({ navigation }) => {
         style={{ backgroundColor: 'white', padding: 16, borderRadius: 8, marginBottom: 16, width: 200, alignItems: 'center' }}
         onPress={handleNelayanPress}
       >
-        <Text style={{ color: '#3780D1', fontSize: 18 }}>Nelayan</Text>
+        <Text style={{ color: '#3780D1', fontSize: 18 }}>FisherMan</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={{ backgroundColor: 'white', padding: 16, borderRadius: 8, width: 200, alignItems: 'center' }}
         onPress={handlePedagangIkanPress}
       >
-        <Text style={{ color: '#3780D1', fontSize: 18 }}>Pedagang Ikan</Text>
+        <Text style={{ color: '#3780D1', fontSize: 18 }}>Traders</Text>
       </TouchableOpacity>
     </View>
   );

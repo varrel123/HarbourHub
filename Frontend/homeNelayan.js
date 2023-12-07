@@ -1,13 +1,14 @@
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, FlatList, Image, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { AntDesign } from '@expo/vector-icons'; 
  
   const HomeNelayan = () => {
     const navigation = useNavigation();
     // Replace this with your actual data
     const products = Array.from({ length: 20 }, (_, i) => ({
       id: String(i),
-      name: `Ikan Tongkol ${i}`,
+      name: `Ikan Tongkol`,
       price: `Rp. ${30_000 }/Kg`,
       image: 'https://i.ibb.co/g4BCmjD/OIP.jpg',
     }));
@@ -17,6 +18,9 @@ import { useNavigation } from '@react-navigation/native';
       navigation.navigate('AddProduct'); // Navigate to the AddProduct screen
     };
 
+    const navigateToProductDetails = (productId) => {
+      navigation.navigate('ProductDetails', { productId }); // Navigate to the ProductDetails screen with the productId
+    };
     return (
       <View style={styles.container}>
         <Text style={styles.address}>Harbour Address</Text>
@@ -30,19 +34,23 @@ import { useNavigation } from '@react-navigation/native';
           renderItem={({ item }) => (
             <View style={styles.productContainer}>
               <Image source={{ uri: item.image }} style={styles.productImage} />
-              <Text style={styles.price}>{item.price}</Text>
-              <Button style={{marginBottom:10}} title="View Details" onPress={() => {}} />
+              <Text style={styles.details}>{item.name}</Text> 
+              <Text style={styles.details}>{item.price}</Text> 
+              <TouchableOpacity style={styles.viewDetails} onPress={() => navigateToProductDetails(item.id)}>
+                <Text style={{color: 'white', fontSize: 8}}>View Details</Text>
+              </TouchableOpacity>
             </View>
-            
           )}
         />
       
 
       <View style={styles.tabBar}>
-        <Button title="Home" onPress={() => {}} />
-        <Button title="Add Product" onPress={navigateToAddProduct} />
-        <Button title="History" onPress={() => {}} />
-        <Button title="Account" onPress={() => {}} />
+      <TouchableOpacity style={styles.bottomNavButton} onPress={navigateToAddProduct}>
+        <AntDesign name="plus" size={24} color='#3780D1' />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.bottomNavButton} onPress={() => {}}>
+        <AntDesign name="user" size={24} color='#3780D1' />
+      </TouchableOpacity>
       </View>
     </View>
   );
@@ -52,6 +60,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F5FCFF',
+  },
+  viewDetails:{
+    backgroundColor: '#3780D1',
+    padding: 10,
+    marginRight: 10,
+    borderRadius: 8,
+    width: 150, 
+    height: 30,
+    alignItems: 'center' 
   },
   address: {
     fontSize: 12,
@@ -70,6 +87,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   productContainer: {
+    padding: 5,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -78,15 +96,19 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
   },
-  price: {
-    fontSize: 14,
+  details: {
+    fontSize: 12,
     textAlign: 'center',
-    margin: 10,
+    margin: 5,
   },
   tabBar: {
+    height: 60,
+    padding: 5,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginBottom: 10,
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: '#3780D1',
   },
 });
 

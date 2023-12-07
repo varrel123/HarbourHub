@@ -29,11 +29,15 @@ const LoginPage = () => {
   const navigateToRegister = () => {
     navigation.navigate('register'); // Navigate to the Register screen
   };
-
+  const navigateToSelectRole = () => {
+    navigation.navigate('SelectRole'); // Navigate to the Select Role screen
+  };
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.topRight}>
-        <Text style={{ fontSize: 20, paddingLeft:10, paddingTop:10, color: '#3780D1',backgroundColor: '#84D3EB' }}>Select Role</Text>
+        <TouchableOpacity onPress={navigateToSelectRole}> 
+          <Text style={{ fontSize: 20, paddingLeft:10, paddingTop:10, color: '#3780D1',backgroundColor: '#84D3EB' }}>Select Role</Text>
+        </TouchableOpacity>
       </View>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#84D3EB' }}>
         <View style={{ backgroundColor: 'white', padding: 16, width: Dimensions.get('window').width * 0.8, borderRadius: 8  }}>

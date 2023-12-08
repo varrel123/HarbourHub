@@ -7,7 +7,7 @@ import axios from 'axios';
 
 const AddProduct = ({ navigation }) => {
     const [productname, setProductName] = useState('');
-    const [productcost, setProductCost] = useState(0); // Assuming product cost is an integer
+    const [productcost, setProductCost] = useState(0);
     const [productimg, setProductImage] = useState(null);
     const [description, setDescription] = useState('');
     const [accountid, setAccountID] = useState('');
@@ -16,7 +16,9 @@ const AddProduct = ({ navigation }) => {
 
     const handleAddProduct = async () => {
         if (productname && productcost && description && accountid && posteddate && catchdate && productimg) {
-            const response = await axios.post('http://192.168.1.6:5000/addproduct', { productname, productcost, accountid, posteddate, description, catchdate, productimg })
+
+            //sesuaikan dengan IP Address masing"
+            const response = await axios.post('http://192.168.0.137:5000/addproduct', { productname, productcost, accountid, posteddate, description, catchdate, productimg })
                 .then(function (response) {
                     console.log(response);
                     if (response.status === 200) {
@@ -70,6 +72,13 @@ const AddProduct = ({ navigation }) => {
                     onChangeText={setProductName}
                     value={productname}
                 />
+                <Text>Account ID:</Text>
+                <TextInput
+                    style={styles.input}
+                    onChangeText={setAccountID}
+                    value={accountid}
+                    keyboardType="numeric"
+                />
                 <Text>Product Cost:</Text>
                 <TextInput
                     style={styles.input}
@@ -90,13 +99,6 @@ const AddProduct = ({ navigation }) => {
                     onChangeText={setDescription}
                     value={description}
                     multiline={true}
-                />
-                <Text>Account ID:</Text>
-                <TextInput
-                    style={[styles.input, { height: 80 }]}
-                    onChangeText={setAccountID}
-                    value={accountid}
-                    keyboardType="numeric"
                 />
                 <Text>Catch Date:</Text>
                 <DateTimePicker
@@ -136,16 +138,42 @@ const AddProduct = ({ navigation }) => {
 
 
 const EditProduct = ({ navigation }) => {
-    const [productName, setProductName] = useState('');
-    const [productCost, setProductCost] = useState(0); // Assuming product cost is an integer
-    const [productImage, setProductImage] = useState(null); // Assuming product image is a PNG file
+    const [productname, setProductName] = useState('');
+    const [productcost, setProductCost] = useState(0);
+    const [productimg, setProductImage] = useState(null);
     const [description, setDescription] = useState('');
+    const [accountid, setAccountID] = useState('');
+    const [catchdate, setCatchDate] = useState(new Date());
+    const [posteddate, setPostedDate] = useState(new Date());
+    const [productid, setProductID] = useState('');
 
-    const handleEditProduct = () => {
-        // Handle the add product logic here
-        // Navigate to the HomeNelayan screen
-        navigation.navigate('homeNelayan');
+    const handleEditProduct = async () => {
+        if (productname && productcost && description && accountid && posteddate && catchdate && productid && productimg) {
+
+            //sesuaikan dengan IP Address masing"
+            const response = await axios.put('http://192.168.0.137:5000/updateproduct', { productname, productcost, accountid, posteddate, description, catchdate, productid, productimg })
+                .then(function (response) {
+                    console.log(response);
+                    if (response.status === 200) {
+                        if (response.data.message === 'Product Updated') {
+                            alert('Update product successful!');
+                            navigation.navigate('homeNelayan');
+                        } else {
+                            alert(response.data.message);
+                        }
+                    } else if (response.status === 404) {
+                        alert('Failed to Update product!');
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    alert('Add product failed. Please try again.');
+                });
+        } else {
+            alert('Please fill in all fields.');
+        }
     };
+
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -176,13 +204,27 @@ const EditProduct = ({ navigation }) => {
                 <TextInput
                     style={styles.input}
                     onChangeText={setProductName}
-                    value={productName}
+                    value={productname}
+                />
+                <Text>Account ID:</Text>
+                <TextInput
+                    style={styles.input}
+                    onChangeText={setAccountID}
+                    value={accountid}
+                    keyboardType="numeric"
+                />
+                <Text>Product ID:</Text>
+                <TextInput
+                    style={styles.input}
+                    onChangeText={setProductID}
+                    value={productid}
+                    keyboardType="numeric"
                 />
                 <Text>Product Cost:</Text>
                 <TextInput
                     style={styles.input}
                     onChangeText={setProductCost}
-                    value={productCost.toString()}
+                    value={productcost.toString()}
                     keyboardType="numeric"
                 />
                 <Text>Product Image:</Text>
@@ -190,7 +232,7 @@ const EditProduct = ({ navigation }) => {
                     <TouchableOpacity style={styles.pickImageButton} onPress={pickImage}>
                         <Text style={{ color: 'white' }}>Pick Image</Text>
                     </TouchableOpacity>
-                    {productImage && <Image source={{ uri: productImage }} />}
+                    {productimg && <Image source={{ uri: productimg }} />}
                 </View>
                 <Text>Description:</Text>
                 <TextInput
@@ -198,6 +240,34 @@ const EditProduct = ({ navigation }) => {
                     onChangeText={setDescription}
                     value={description}
                     multiline={true}
+                />
+                <Text>Catch Date:</Text>
+                <DateTimePicker
+                    style={{ width: 200 }}
+                    onChangeText={setCatchDate}
+                    value={catchdate}
+                    mode="date"
+                    placeholder="select date"
+                    format="YYYY-MM-DD"
+                    minDate="2016-05-01"
+                    maxDate="2016-06-01"
+                    confirmBtnText="Confirm"
+                    cancelBtnText="Cancel"
+                    onDateChange={(date) => { setDate(date) }}
+                />
+                <Text>Posted Date:</Text>
+                <DateTimePicker
+                    style={{ width: 200 }}
+                    onChangeText={setPostedDate}
+                    value={posteddate}
+                    mode="date"
+                    placeholder="select date"
+                    format="YYYY-MM-DD"
+                    minDate="2016-05-01"
+                    maxDate="2016-06-01"
+                    confirmBtnText="Confirm"
+                    cancelBtnText="Cancel"
+                    onDateChange={(date) => { setDate(date) }}
                 />
             </View>
             <TouchableOpacity style={[styles.addButton, { paddingHorizontal: 20 }]} onPress={handleEditProduct}>

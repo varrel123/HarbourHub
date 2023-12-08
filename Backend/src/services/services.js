@@ -202,7 +202,7 @@ async function DeleteProduct(temp) {
 }
 
 async function UpdateProduct(temp) {
-  const { productname, productcost, accountid, posteddate, description, catchdate, productid } = temp;
+  const { productname, productcost, accountid, posteddate, description, catchdate, productid,productimg } = temp;
 
   try {
     const accountQuery = `SELECT role FROM Account WHERE accountid = ${accountid}`;
@@ -213,16 +213,16 @@ async function UpdateProduct(temp) {
       const productResult = await db.query(productQuery);
 
       if (productResult.rowCount === 1 && productResult.rows[0].accountid === accountid) {
-        const query = `UPDATE Product SET productname = '${productname}', productcost = '${productcost}' ,accountid = '${accountid}', posteddate = '${posteddate}',description = '${description}',catchdate = '${catchdate}' WHERE productid = '${productid}' `;
+        const query = `UPDATE Product SET productname = '${productname}', productcost = '${productcost}' ,accountid = '${accountid}', posteddate = '${posteddate}',description = '${description}',catchdate = '${catchdate}' ,productimg = '${productimg}' WHERE productid = '${productid}' `;
         const result = await db.query(query);
 
         if (result.rowCount === 1) {
           return {
-            message: 'Product Updated'
+            status: 200,message: 'Product Updated'
           };
         } else {
           return {
-            message: 'Failed to Update product'
+            status: 404, message: 'Failed to Update product'
           };
         }
       } else {

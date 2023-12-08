@@ -9,6 +9,7 @@ import { SelectRole, WelcomePage } from './selectRole';
 import HomeNelayan from './homeNelayan';
 import { AddProduct, EditProduct } from './addProduct';
 import ProductDetails from './productDetails';
+// import {FisherManAccount,TraderAccount,EditTraderAccount,EditFisherManAccount} from './account';
 
 const Stack = createStackNavigator();
 

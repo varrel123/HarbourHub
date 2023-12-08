@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage'; //npm install @react-native-async-storage/async-storage
+
 
 const LoginFisherman = () => {
   const navigation = useNavigation();
@@ -19,12 +21,18 @@ const LoginFisherman = () => {
 
   const handleLogin = async () => {
     if (Email && Password) {
-                                        //sesuaikan dengan IP Address masing"
-      const response = await axios.post('http://192.168.0.137:5000/loginFisherMan', { Email, Password })
+      const response = await axios.post('http://172.20.10.2:5000/loginFisherMan', { Email, Password })
         .then(function (response) {
           console.log(response);
           if (response.status === 200) {
             if (response.data.message === 'Login successful') {
+              AsyncStorage.setItem('accountid', response.data.user.accountid.toString())
+                .then(() => {
+                  console.log('Account ID saved to AsyncStorage');
+                })
+                .catch((error) => {
+                  console.error('Error saving account ID to AsyncStorage:', error);
+                });
               alert('Login successful!');
               navigation.navigate('homeNelayan');
             } else {
@@ -38,12 +46,11 @@ const LoginFisherman = () => {
           console.log(error);
           alert('Login failed. Please try again.');
         });
-
     } else {
       alert('Please fill in all fields.');
     }
   };
-
+  
   const navigateToRegister = () => {
     navigation.navigate('register'); // Navigate to the Register screen
   };
@@ -102,7 +109,7 @@ const LoginTrader = () => {
 
   const handleLogin = async () => {
     if (Email && Password) {
-      const response = await axios.post('http://192.168.0.137:5000/loginTraders', { Email, Password })
+      const response = await axios.post('http://172.20.10.2:5000/loginTraders', { Email, Password })
         .then(function (response) {
           console.log(response);
           if (response.status === 200) {

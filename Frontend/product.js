@@ -1,10 +1,9 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { AntDesign } from '@expo/vector-icons'; // Import the AntDesign icon library
 import DateTimePicker from '@react-native-community/datetimepicker'; //npm install @react-native-community/datetimepicker
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 
 const AddProduct = ({ navigation }) => {
     const [productname, setProductName] = useState('');
@@ -15,50 +14,32 @@ const AddProduct = ({ navigation }) => {
     const [catchdate, setCatchDate] = useState(new Date());
     const [posteddate, setPostedDate] = useState(new Date());
 
-    useEffect(() => {
-        // Retrieve the account ID from AsyncStorage
-        AsyncStorage.getItem('accountid')
-            .then((accountid) => {
-                console.log('Retrieved account ID from AsyncStorage:', accountid);
-                setAccountID(accountid); // Set the retrieved account ID to the state
-            })
-            .catch((error) => {
-                console.error('Error retrieving account ID from AsyncStorage:', error);
-            });
-    }, []);
-
     const handleAddProduct = async () => {
         if (productname && productcost && description && accountid && posteddate && catchdate && productimg) {
-          const response = await axios.post('http://172.20.10.2:5000/addproduct', {
-            productname,
-            productcost,
-            accountid,
-            posteddate,
-            description,
-            catchdate,
-            productimg,
-          })
-            .then(function (response) {
-              console.log(response);
-              if (response.status === 200) {
-                if (response.data.message === 'Product Added') {
-                  alert('Add product successful!');
-                  navigation.navigate('homeNelayan');
-                } else {
-                  alert(response.data.message);
-                }
-              } else if (response.status === 404) {
-                alert('Add product Failed!');
-              }
-            })
-            .catch(function (error) {
-              console.log(error);
-              alert('Add product failed. Please try again.');
-            });
+
+            //sesuaikan dengan IP Address masing"
+            const response = await axios.post('http://192.168.0.137:5000/addproduct', { productname, productcost, accountid, posteddate, description, catchdate, productimg })
+                .then(function (response) {
+                    console.log(response);
+                    if (response.status === 200) {
+                        if (response.data.message === 'Product Added') {
+                            alert('Add product successful!');
+                            navigation.navigate('homeNelayan');
+                        } else {
+                            alert(response.data.message);
+                        }
+                    } else if (response.status === 404) {
+                        alert('Add product Failed!');
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    alert('Add product failed. Please try again.');
+                });
         } else {
-          alert('Please fill in all fields.');
+            alert('Please fill in all fields.');
         }
-      };
+    };
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -90,6 +71,13 @@ const AddProduct = ({ navigation }) => {
                     style={styles.input}
                     onChangeText={setProductName}
                     value={productname}
+                />
+                <Text>Account ID:</Text>
+                <TextInput
+                    style={styles.input}
+                    onChangeText={setAccountID}
+                    value={accountid}
+                    keyboardType="numeric"
                 />
                 <Text>Product Cost:</Text>
                 <TextInput
@@ -163,7 +151,7 @@ const EditProduct = ({ navigation }) => {
         if (productname && productcost && description && accountid && posteddate && catchdate && productid && productimg) {
 
             //sesuaikan dengan IP Address masing"
-            const response = await axios.put('http://172.20.10.2:5000/updateproduct', { productname, productcost, accountid, posteddate, description, catchdate, productid, productimg })
+            const response = await axios.put('http://192.168.0.137:5000/updateproduct', { productname, productcost, accountid, posteddate, description, catchdate, productid, productimg })
                 .then(function (response) {
                     console.log(response);
                     if (response.status === 200) {

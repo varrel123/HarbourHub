@@ -7,9 +7,9 @@ import {LoginFisherman,LoginTrader} from './login';
 import RegistrationPage from './register';
 import { SelectRole, WelcomePage } from './selectRole';
 import HomeNelayan from './homeNelayan';
-import { AddProduct, EditProduct } from './addProduct';
+import { AddProduct, EditProduct } from './Product';
 import ProductDetails from './productDetails';
-// import {FisherManAccount,TraderAccount,EditTraderAccount,EditFisherManAccount} from './account';
+import {FisherManAccount,TraderAccount,EditTraderAccount,EditFisherManAccount} from './account';
 
 const Stack = createStackNavigator();
 
@@ -26,6 +26,10 @@ export default function App() {
         <Stack.Screen name="AddProduct" component={AddProduct} />
         <Stack.Screen name="EditProduct" component={EditProduct} />
         <Stack.Screen name="ProductDetails" component={ProductDetails} />
+        <Stack.Screen name="FisherManAccount" component={FisherManAccount} />
+        <Stack.Screen name="TraderAccount" component={TraderAccount} />
+        <Stack.Screen name="EditTraderAccount" component={EditTraderAccount} />
+        <Stack.Screen name="EditFisherManAccount" component={EditFisherManAccount} />
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>

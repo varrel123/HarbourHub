@@ -14,6 +14,22 @@ const AddProduct = ({ navigation }) => {
     const [catchdate, setCatchDate] = useState(new Date());
     const [posteddate, setPostedDate] = useState(new Date());
     const [accountid, setAccountID] = useState('');
+    
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+    
+        if (!result.canceled) {
+            const selectedImageUri = result.assets && result.assets.length > 0
+                ? result.assets[0].uri
+                : null;
+            setProductImage(selectedImageUri);
+        }
+    };
 
     useEffect(() => {
         // Retrieve the account ID from AsyncStorage
@@ -60,19 +76,6 @@ const AddProduct = ({ navigation }) => {
         }
     };
 
-    const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-
-        if (!result.canceled) {
-            setProductImage(result.uri);
-        }
-    };
-
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={styles.navBar}>
@@ -98,12 +101,12 @@ const AddProduct = ({ navigation }) => {
                     value={productcost.toString()}
                     keyboardType="numeric"
                 />
-                <Text>Product Image:</Text>
+               <Text>Product Image:</Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <TouchableOpacity style={styles.pickImageButton} onPress={pickImage}>
                         <Text style={{ color: 'white' }}>Pick Image</Text>
                     </TouchableOpacity>
-                    {productimg && <Image source={{ uri: productimg }} />}
+                    {productimg && <Image source={{ uri: productimg }} style={{ width: 50, height: 50 }} />}
                 </View>
                 <Text>Description:</Text>
                 <TextInput
@@ -159,6 +162,22 @@ const EditProduct = ({ navigation }) => {
     const [productid, setProductID] = useState('');
     const [accountid, setAccountID] = useState('');
 
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+    
+        if (!result.canceled) {
+            const selectedImageUri = result.assets && result.assets.length > 0
+                ? result.assets[0].uri
+                : null;
+            setProductImage(selectedImageUri);
+        }
+    };
+
     useEffect(() => {
         // Retrieve the account ID from AsyncStorage
         AsyncStorage.getItem('accountid')
@@ -206,20 +225,6 @@ const EditProduct = ({ navigation }) => {
       } else {
         alert('Please fill in all fields.');
       }
-    };
-
-
-    const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-
-        if (!result.canceled) {
-            setProductImage(result.uri);
-        }
     };
 
     return (
@@ -303,6 +308,7 @@ const EditProduct = ({ navigation }) => {
         </View>
     );
 };
+
 const styles = StyleSheet.create({
 
     navBar: {

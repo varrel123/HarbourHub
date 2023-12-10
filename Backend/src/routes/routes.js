@@ -16,7 +16,7 @@ router.put("/updateaccount", HBController.UpdateAccount);
 
 router.post("/addproduct", HBController.AddProduct);
 
-router.get("/showproduct", HBController.ShowProduct);
+router.post("/showproduct", HBController.ShowProduct);
 
 router.delete("/deleteproduct", HBController.DeleteProduct);
 

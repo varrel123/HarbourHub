@@ -151,12 +151,14 @@ async function AddProduct(temp) {
 }
 
 
-async function ShowProduct() {
-  const query = 'SELECT * FROM Product';
+async function ShowProduct(temp) {
+  const { accountid } = temp;
+  const query = `SELECT * FROM Product WHERE accountid = '${accountid}'`;
   const result = await db.query(query);
 
   if (result.rowCount > 0) {
     return {
+      status: 200,
       message: 'Product found',
       accounts: result.rows,
     };

@@ -65,7 +65,7 @@ async function AddProduct(req,res){
 
 async function ShowProduct(req,res){
     try{
-        const result = await HBService.ShowProduct(req.user);
+        const result = await HBService.ShowProduct(req.body);
         res.json(result);
     }catch(err){
         res.json(err);

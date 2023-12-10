@@ -8,7 +8,7 @@ router.post('/loginTraders', HBController.loginTraders);
 
 router.post('/register', HBController.register);
 
-router.get('/showuser', HBController.showUser);
+router.post('/showuser', HBController.showUser);
 
 router.delete('/deleteaccount', HBController.deleteUser);
 

@@ -20,7 +20,7 @@ import { AntDesign } from '@expo/vector-icons';
 
     const navigateToAccount = () => {
       console.log('Navigating to Account...');
-      navigation.navigate('Account'); // Navigate to the AddProduct screen
+      navigation.navigate('FisherManAccount'); // Navigate to the AddProduct screen
     };
 
     const navigateToProductDetails = (productId) => {

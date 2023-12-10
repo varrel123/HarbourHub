@@ -7,7 +7,7 @@ import {LoginFisherman,LoginTrader} from './login';
 import RegistrationPage from './register';
 import { SelectRole, WelcomePage } from './selectRole';
 import HomeNelayan from './homeNelayan';
-import { AddProduct, EditProduct } from './Product';
+import { AddProduct, EditProduct } from './product';
 import ProductDetails from './productDetails';
 import {FisherManAccount,TraderAccount,EditTraderAccount,EditFisherManAccount} from './account';
 

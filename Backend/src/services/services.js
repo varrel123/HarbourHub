@@ -22,85 +22,93 @@ async function loginFisherman(temp) {
   }
 }
 
-  async function loginTraders(temp) {
-    const { Email, Password } = temp;
-    const query = `SELECT * FROM Account WHERE Email = '${Email}' AND Role = 'Traders'`;
-    const result = await db.query(query);
-    if (result.rowCount > 0) {
-        const user = result.rows[0];
-        const comparePass = await helper.comparePassword(Password, user.password);
-        if (comparePass) {
-          return { status: 200, message: 'Login successful', user };
-        } else {
-          return { status: 401, message: 'Password is not correct' };
-        }
+async function loginTraders(temp) {
+  const { Email, Password } = temp;
+  const query = `SELECT * FROM Account WHERE Email = '${Email}' AND Role = 'Traders'`;
+  const result = await db.query(query);
+  if (result.rowCount > 0) {
+    const user = result.rows[0];
+    const comparePass = await helper.comparePassword(Password, user.password);
+    if (comparePass) {
+      return { status: 200, message: 'Login successful', user };
     } else {
-      return { status: 404, message: 'Account not found' };
+      return { status: 401, message: 'Password is not correct' };
+    }
+  } else {
+    return { status: 404, message: 'Account not found' };
+  }
+}
+
+
+async function showUser(temp) {
+  try {
+    const { accountid } = temp;
+    const query = `SELECT * FROM Account WHERE accountid = '${accountid}'`;
+    const result = await db.query(query);
+
+    if (result.rowCount > 0) {
+      return {
+        status: 200,
+        message: 'Account found',
+        account: result.rows[0],
+      };
+    } else {
+      return {
+        status: 200, // or 204 (No Content) depending on your preference
+        message: 'Account not found',
+      };
+    }
+  } catch (error) {
+    console.error('Error fetching account information:', error);
+    throw error; // Re-throw the error to ensure it gets logged
+  }
+}
+
+async function register(temp) {
+  const { Name, Email, Password, Address, Phone, Role } = temp;
+  const pass = await helper.hashPassword(Password);
+  const query = `INSERT INTO Account (Name, Email, Password, Address, Phone, Role) VALUES ('${Name}', '${Email}', '${pass}', '${Address}', '${Phone}', '${Role}')`;
+  const result = await db.query(query);
+  if (result.rowCount === 1) {
+    return {
+      status: 200, message: 'Register successful'
+    }
+  } else {
+    return {
+      status: 404, message: 'Register Failed'
     }
   }
-  
-
-async function showUser() {
-    const query = 'SELECT * FROM Account';
-    const result = await db.query(query);
-  
-    if (result.rowCount > 0) {
-      return {
-        message: 'Accounts found',
-        accounts: result.rows,
-      };
-    } else {
-      return {
-        message: 'No Accounts found',
-      };
-    }
 }
 
-async function register (temp){
-    const { Name, Email, Password, Address, Phone, Role } = temp;
-    const pass = await helper.hashPassword(Password);
-    const query = `INSERT INTO Account (Name, Email, Password, Address, Phone, Role) VALUES ('${Name}', '${Email}', '${pass}', '${Address}', '${Phone}', '${Role}')`;
-    const result = await db.query(query);
-    if(result.rowCount === 1){
-        return {
-          status: 200, message: 'Register successful'        
-        }
-    }else{
-        return{
-          status: 404, message: 'Register Failed'        
-        } 
+async function deleteUser(temp) {
+  const { Email } = temp;
+  const query = `DELETE FROM Account WHERE Email = '${Email}'`;
+  const result = await db.query(query);
+  if (result.rowCount === 1) {
+    return {
+      message: 'Account deleted'
     }
+  }
+  else {
+    return {
+      message: 'Account not found'
+    }
+  }
 }
 
-async function deleteUser (temp){
-    const {Email} = temp;
-    const query = `DELETE FROM Account WHERE Email = '${Email}'`;
-    const result = await db.query(query);
-    if(result.rowCount === 1){
-        return {
-            message: 'Account deleted'
-        }
-    }
-    else{
-        return {
-             message: 'Account not found'
-           }
-    }
-}
-
-async function UpdateAccount (temp){
-  const {accountid, Name, Email, Password, Address, Phone, Role } = temp;
+async function UpdateAccount(temp) {
+  const { accountid, Name, Email, Password, Address, Phone, Role } = temp;
   const pass = await helper.hashPassword(Password);
   const query = `UPDATE Account SET accountid = '${accountid}', Name = '${Name}' , Email = '${Email}',Password = '${pass}',Address = '${Address}',Phone = '${Phone}',Role = '${Role}' WHERE accountid = '${accountid}' `;
   const result = await db.query(query);
-  if(result.rowCount === 1){
-      return {
-          message: 'Product account successful'
-      }
-  }else{
-      return{
-          message: 'Error'
-      } 
+  if (result.rowCount === 1) {
+    return {
+      message: 'Product account successful'
+    }
+  } else {
+    return {
+      message: 'Error'
+    }
   }
 }
 
@@ -115,7 +123,7 @@ async function AddProduct(temp) {
     const accountResult = await db.query(accountQuery);
 
     if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'FisherMan') {
-      const { productname, productcost, accountid, posteddate, description, catchdate,productimg } = temp;
+      const { productname, productcost, accountid, posteddate, description, catchdate, productimg } = temp;
       const query = `INSERT INTO Product (productname, productcost, accountid, posteddate, description, catchdate,productimg) VALUES ('${productname}', '${productcost}', '${accountid}','${posteddate}', '${description}', '${catchdate}','${productimg}')`;
 
       const result = await db.query(query);
@@ -202,7 +210,7 @@ async function DeleteProduct(temp) {
 }
 
 async function UpdateProduct(temp) {
-  const { productname, productcost, accountid, posteddate, description, catchdate, productid,productimg } = temp;
+  const { productname, productcost, accountid, posteddate, description, catchdate, productid, productimg } = temp;
 
   try {
     const accountQuery = `SELECT role FROM Account WHERE accountid = ${accountid}`;
@@ -218,7 +226,7 @@ async function UpdateProduct(temp) {
 
         if (result.rowCount === 1) {
           return {
-            status: 200,message: 'Product Updated'
+            status: 200, message: 'Product Updated'
           };
         } else {
           return {
@@ -254,7 +262,7 @@ async function Order(temp) {
     const accountResult = await db.query(accountQuery);
 
     if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'Traders') {
-      const {accountid , productid , totalamount , orderdate , deliverydate , deliverystatus} = temp;
+      const { accountid, productid, totalamount, orderdate, deliverydate, deliverystatus } = temp;
       const query = `INSERT INTO orders (accountid, productid, totalamount, orderdate, deliverydate, deliverystatus) VALUES 
                     ('${accountid}', '${productid}', '${totalamount}','${orderdate}', '${deliverydate}', '${deliverystatus}')`;
       const result = await db.query(query);
@@ -281,7 +289,7 @@ async function Order(temp) {
 }
 
 async function UpdateOrder(temp) {
-  const {orderid,accountid , productid , totalamount , orderdate , deliverydate , deliverystatus} = temp;
+  const { orderid, accountid, productid, totalamount, orderdate, deliverydate, deliverystatus } = temp;
 
   try {
     const accountQuery = `SELECT role FROM Account WHERE accountid = ${accountid}`;
@@ -323,7 +331,7 @@ async function UpdateOrder(temp) {
 }
 
 async function DeleteOrder(temp) {
-  const {orderid,accountid} = temp;
+  const { orderid, accountid } = temp;
 
   try {
     const accountQuery = `SELECT role FROM Account WHERE accountid = ${accountid}`;
@@ -653,14 +661,14 @@ async function payment(temp) {
     const accountResult = await db.query(accountQuery);
 
     if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'Traders') {
-      const {orderid,details} = temp;
-      
+      const { orderid, details } = temp;
+
       const query = ` INSERT INTO payment (orderid,total, details) SELECT '${orderid}',
         (SELECT totalamount FROM Orders WHERE OrderID = '${orderid}') * 
         (SELECT productcost FROM Product WHERE ProductID = (SELECT ProductID FROM Orders WHERE OrderID = '${orderid}')),
         '${details}';`;
 
-        console.log('Query:', query);
+      console.log('Query:', query);
 
       const result = await db.query(query);
       if (result.rowCount === 1) {
@@ -687,27 +695,27 @@ async function payment(temp) {
 
 
 module.exports = {
-    loginFisherman,
-    loginTraders,
-    register,
-    showUser,
-    UpdateAccount,
-    deleteUser,
-    AddProduct,
-    ShowProduct,
-    DeleteProduct,
-    UpdateProduct,
-    Order,
-    UpdateOrder,
-    DeleteOrder,
-    AddCart,
-    ShowCart,
-    DeleteCart,
-    UpdateCart,
-    AddReview,
-    ShowReview,
-    UpdateReview,
-    DeleteReview,
-    payment
+  loginFisherman,
+  loginTraders,
+  register,
+  showUser,
+  UpdateAccount,
+  deleteUser,
+  AddProduct,
+  ShowProduct,
+  DeleteProduct,
+  UpdateProduct,
+  Order,
+  UpdateOrder,
+  DeleteOrder,
+  AddCart,
+  ShowCart,
+  DeleteCart,
+  UpdateCart,
+  AddReview,
+  ShowReview,
+  UpdateReview,
+  DeleteReview,
+  payment
 };
 

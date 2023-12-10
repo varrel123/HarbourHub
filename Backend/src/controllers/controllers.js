@@ -29,7 +29,7 @@ async function register(req,res){
 
 async function showUser(req,res){
     try{
-        const result = await HBService.showUser(req.user);
+        const result = await HBService.showUser(req.body);
         res.json(result);
     }catch(err){
         res.json(err);

@@ -103,11 +103,11 @@ async function UpdateAccount(temp) {
   const result = await db.query(query);
   if (result.rowCount === 1) {
     return {
-      message: 'Product account successful'
+      status:200, message: 'Update account successful'
     }
   } else {
     return {
-      message: 'Error'
+      status:404, message: 'Error'
     }
   }
 }

@@ -29,7 +29,6 @@ const AddProduct = ({ navigation }) => {
 
     const handleAddProduct = async () => {
         if (productname && productcost && description && accountid && posteddate && catchdate && productimg) {
-            // Modify the request to include the user's information
             const response = await axios.post('http://192.168.0.137:5000/addproduct', {
                 productname,
                 productcost,

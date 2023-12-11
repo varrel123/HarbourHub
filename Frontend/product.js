@@ -169,7 +169,7 @@ const EditProduct = ({ navigation }) => {
             aspect: [4, 3],
             quality: 1,
         });
-    
+
         if (!result.canceled) {
             const selectedImageUri = result.assets && result.assets.length > 0
                 ? result.assets[0].uri
@@ -189,42 +189,42 @@ const EditProduct = ({ navigation }) => {
                 console.error('Error retrieving account ID from AsyncStorage:', error);
             });
     }, []); // The empty dependency array ensures this effect runs once on component mount
-  
+
     const handleEditProduct = async () => {
-      if (productname && productcost && description && accountid && posteddate && catchdate && productid && productimg) {
-        const requestData = {
-          productname,
-          productcost,
-          accountid, // Use the retrieved account ID
-          posteddate,
-          description,
-          catchdate,
-          productid,
-          productimg,
-        };
-  
-        try {
-          const response = await axios.put('http://192.168.0.137:5000/updateproduct', requestData);
-  
-          console.log(response);
-  
-          if (response.status === 200) {
-            if (response.data.message === 'Product Updated') {
-              alert('Update product successful!');
-              navigation.navigate('homeNelayan');
-            } else {
-              alert(response.data.message);
+        if (productname && productcost && description && accountid && posteddate && catchdate && productid && productimg) {
+            const requestData = {
+                productname,
+                productcost,
+                accountid, // Use the retrieved account ID
+                posteddate,
+                description,
+                catchdate,
+                productid,
+                productimg,
+            };
+
+            try {
+                const response = await axios.put('http://192.168.0.137:5000/updateproduct', requestData);
+
+                console.log(response);
+
+                if (response.status === 200) {
+                    if (response.data.message === 'Product Updated') {
+                        alert('Update product successful!');
+                        navigation.navigate('homeNelayan');
+                    } else {
+                        alert(response.data.message);
+                    }
+                } else if (response.status === 404) {
+                    alert('Failed to Update product!');
+                }
+            } catch (error) {
+                console.error('Edit product failed:', error);
+                alert('Edit product failed. Please try again.');
             }
-          } else if (response.status === 404) {
-            alert('Failed to Update product!');
-          }
-        } catch (error) {
-          console.error('Edit product failed:', error);
-          alert('Edit product failed. Please try again.');
+        } else {
+            alert('Please fill in all fields.');
         }
-      } else {
-        alert('Please fill in all fields.');
-      }
     };
 
     return (

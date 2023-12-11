@@ -114,25 +114,35 @@ const LoginTrader = () => {
 
   const handleLogin = async () => {
     if (Email && Password) {
-      const response = await axios.post('http://192.168.0.137:5000/loginTraders', { Email, Password })
-        .then(function (response) {
-          console.log(response);
-          if (response.status === 200) {
-            if (response.data.message === 'Login successful') {
-              alert('Login successful!');
-              navigation.navigate('homeNelayan');
-            } else {
-              alert(response.data.message);
-            }
-          } else if (response.status === 404) {
-            alert('Account not found');
+      try {
+        const response = await axios.post('http://192.168.0.137:5000/loginTraders', { Email, Password });
+  
+        console.log('Response from server:', response);
+  
+        if (response.status === 200) {
+          if (response.data.message === 'Login successful') {
+            AsyncStorage.setItem('accountid', response.data.user.accountid.toString())
+              .then(() => {
+                console.log('Account ID saved to AsyncStorage');
+              })
+              .catch((error) => {
+                console.error('Error saving account ID to AsyncStorage:', error);
+              });
+            alert('Login successful!');
+            navigation.navigate('homeNelayan');
+          } else {
+            alert(response.data.message);
           }
-        })
-        .catch(function (error) {
-          console.log(error);
-          alert('Login failed. Please try again.');
-        });
-
+        } else if (response.status === 404) {
+          alert('Account not found');
+        } else {
+          // Handle other response status codes if needed
+          alert(`Unexpected response status: ${response.status}`);
+        }
+      } catch (error) {
+        console.error('Error during login:', error);
+        alert('Login failed. Please try again.');
+      }
     } else {
       alert('Please fill in all fields.');
     }

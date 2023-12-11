@@ -1,12 +1,50 @@
-import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { AntDesign } from '@expo/vector-icons'; // Import the AntDesign icon library
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 const ProductDetails = () => {
-    const navigation = useNavigation();
-    const route = useRoute();
-    const { productName, productCost, description } = route.params;
+  const navigation = useNavigation();
+
+  const [productInfo, setProductInfo] = useState({
+    productid: 0,
+    productname: '',
+    productcost: '',
+    accountid: 0,
+    posteddate: new Date(), // Default to current date
+    description: '',
+    catchdate: new Date(),
+    productimg: null, // Assuming productimg is a base64 string
+  });
+
+  useEffect(() => {
+    // Mengambil informasi product berdasarkan productid yang disimpan
+    AsyncStorage.getItem('productid')
+      .then((productid) => {
+        console.log('ID product yang diambil dari AsyncStorage:', productid);
+        if (productid) {
+          // Menggunakan permintaan POST untuk mendapatkan informasi product
+          axios.post('http://192.168.0.137:5000/showproductID', { productid })
+            .then((response) => {
+              if (response.data && response.data.accounts && response.data.accounts.length > 0) {
+                setProductInfo(response.data.accounts[0]);
+              } else {
+                console.error('Kesalahan mengambil product informasi:', response.data.message);
+              }
+            })
+            .catch((error) => {
+              console.error('Kesalahan mengambil product informasi:', error);
+            });
+        } else {
+          console.error('ID product tidak terdefinisi');
+        }
+      })
+      .catch((error) => {
+        console.error('Kesalahan mengambil ID product dari AsyncStorage:', error);
+      });
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -14,83 +52,88 @@ const ProductDetails = () => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <AntDesign name="arrowleft" size={24} color="#3780D1" />
         </TouchableOpacity>
-        <Text style={styles.title}>Product Details</Text>
-        <View style={{ width: 20 }}></View>
-      </View>
-
-      <View style={{ padding: 20 }}>
-        <View style={styles.productImageContainer}>
-          <Image source={{ uri: 'url_to_product_image' }} style={{ flex: 1 }} resizeMode="cover" />
-        </View>
-        <Text style={styles.productName}>{productName}</Text>
-        <Text>{productCost}/Kg</Text>
-        <View style={styles.profileSection}>
-          <Image source={{ uri: 'url_to_profile_picture' }} style={{ width: 50, height: 50, borderRadius: 25 }} />
-          <Text style={{ marginLeft: 10 }}>username Pembeli</Text>
-        </View>
-        <Text style={styles.productDescription}>Description of Product</Text>
-        <Text>{description}</Text>
-        
-
-      </View>
-        <TouchableOpacity style={[styles.Button, { paddingHorizontal: 20 }]} onPress={() => navigation.navigate('EditProduct')}>
-            <Text style={{ color: 'white' }}>Edit Information</Text>
+        <Text style={styles.navTitle}>Product Details</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('homeNelayan')}>
+          <AntDesign name="home" size={24} color="#3780D1" />
         </TouchableOpacity>
+      </View>
+
+      <View style={styles.inputContainer}>
+        {Object.entries(productInfo).map(([key, value]) => (
+          <View style={styles.row} key={key}>
+            <Text style={styles.label}>{key}</Text>
+            <Text style={styles.colon}>:</Text>
+            {key === 'posteddate' || key === 'catchdate' ? (
+              <Text style={styles.info}>{new Date(value).toLocaleDateString()}</Text>
+            ) : key === 'productimg' && value ? (
+              <Image source={{ uri: `data:image/png;base64,${value}` }} style={styles.productImage} />
+            ) : (
+              <Text style={styles.info}>{value}</Text>
+            )}
+          </View>
+        ))}
+      </View>
+
+      <TouchableOpacity
+        style={[styles.editButton, { paddingHorizontal: 20 }]}
+        onPress={() => navigation.navigate('EditProduct', { productInfo })}
+      >
+        <Text style={{ color: 'white' }}>Edit Product</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  navBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#3780D1',
-    paddingHorizontal: 10,
-    paddingBottom: 10,
-  },
   container: {
     flex: 1,
     backgroundColor: 'white',
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color:'#3780D1'
+  navBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
   },
-  productImageContainer: {
-    borderWidth: 1,
-    borderColor: 'white',
-    height: 200,
-    marginVertical: 10,
-  },
-  productName: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  productDescription: {
+  navTitle: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#3780D1',
   },
-  profileSection: {
+  inputContainer: {
+    flex: 1,
+    marginTop: 20,
+    paddingHorizontal: 20,
+  },
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 10,
-    borderTopWidth: 1, 
-    borderBottomWidth: 1, 
-    borderColor: '#3780D1',
+    marginBottom: 10,
   },
-  Button: {
-    position: 'absolute',
-    bottom: 20, // Atur jarak dari bawah layar
-    left: '8%', // Pusatkan tombol di tengah layar
+  label: {
+    flex: 1,
+    fontWeight: 'bold',
+  },
+  colon: {
+    marginHorizontal: 5,
+  },
+  info: {
+    flex: 2,
+  },
+  productImage: {
+    width: 100,
+    height: 100,
+    resizeMode: 'cover',
+  },
+  editButton: {
     backgroundColor: '#3780D1',
-    padding: 10,
-    borderRadius: 8,
-    width: 350,
+    paddingVertical: 10,
     alignItems: 'center',
+    marginTop: 20,
+    borderRadius: 5,
+    alignSelf: 'center',
   },
 });
 

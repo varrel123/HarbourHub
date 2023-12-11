@@ -40,8 +40,10 @@ const HomeNelayan = () => {
     navigation.navigate('FisherManAccount');
   };
 
-  const navigateToProductDetails = (productId) => {
-    navigation.navigate('ProductDetails', { productId });
+  const navigateToProductDetails = async (productId) => {
+    // Simpan productid ke AsyncStorage sebelum menavigasi ke halaman detail
+    await AsyncStorage.setItem('productid', productId);
+    navigation.navigate('ProductDetails');
   };
 
   const arrayBufferToBase64 = (buffer) => {

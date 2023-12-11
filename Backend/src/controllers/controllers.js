@@ -72,6 +72,15 @@ async function ShowProduct(req,res){
     }
 }
 
+async function ShowProductID(req,res){
+    try{
+        const result = await HBService.ShowProductID(req.body);
+        res.json(result);
+    }catch(err){
+        res.json(err);
+    }
+}
+
 async function DeleteProduct(req,res){
     try{
         const result = await HBService.DeleteProduct(req.body);
@@ -220,5 +229,6 @@ module.exports = {
     ShowReview,
     DeleteReview,
     UpdateReview,
-    payment
+    payment,
+    ShowProductID
 };

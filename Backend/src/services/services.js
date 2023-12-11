@@ -73,7 +73,7 @@ async function register(temp) {
     return {
       status: 200, message: 'Register successful'
     }
-  } else {
+  } else {7
     return {
       status: 404, message: 'Register Failed'
     }
@@ -154,6 +154,24 @@ async function AddProduct(temp) {
 async function ShowProduct(temp) {
   const { accountid } = temp;
   const query = `SELECT * FROM Product WHERE accountid = '${accountid}'`;
+  const result = await db.query(query);
+
+  if (result.rowCount > 0) {
+    return {
+      status: 200,
+      message: 'Product found',
+      accounts: result.rows,
+    };
+  } else {
+    return {
+      message: 'No Product Added',
+    };
+  }
+}
+
+async function ShowProductID(temp) {
+  const { productid } = temp;
+  const query = `SELECT * FROM Product WHERE productid = '${productid}'`;
   const result = await db.query(query);
 
   if (result.rowCount > 0) {
@@ -718,6 +736,7 @@ module.exports = {
   ShowReview,
   UpdateReview,
   DeleteReview,
-  payment
+  payment,
+  ShowProductID
 };
 

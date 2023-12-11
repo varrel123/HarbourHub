@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 const FisherManAccount = ({ navigation }) => {
+
     const [accountInfo, setAccountInfo] = useState({
         accountid: 0,
         name: '',
@@ -71,6 +72,7 @@ const FisherManAccount = ({ navigation }) => {
             </TouchableOpacity>
         </View>
     );
+    
 };
 
 const TraderAccount = () => {
@@ -92,7 +94,7 @@ const TraderAccount = () => {
 
                 if (accountid) {
                     // Menggunakan permintaan GET untuk mendapatkan informasi pengguna
-                    axios.post('http://192.168.1.19:5000/showuser', { accountid })
+                    axios.post('http://192.168.0.137:5000/showuser', { accountid })
                         .then((response) => {
                             if (response.status === 200) {
                                 setAccountInfo(response.data.account);

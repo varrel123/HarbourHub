@@ -404,8 +404,8 @@ async function AddCart(temp) {
     const accountResult = await db.query(accountQuery);
 
     if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'Traders') {
-      const { accountid, created, productid } = temp;
-      const query = `INSERT INTO Shopping_Cart (accountid, created, productid ) VALUES ('${accountid}','${created}', '${productid}')`;
+      const { accountid, productid } = temp;
+      const query = `INSERT INTO Shopping_Cart (accountid, productid ) VALUES ('${accountid}', '${productid}')`;
 
       const result = await db.query(query);
 

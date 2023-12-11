@@ -22,7 +22,7 @@ const LoginFisherman = () => {
   const handleLogin = async () => {
     if (Email && Password) {
       try {
-        const response = await axios.post('http://192.168.0.137:5000/loginFisherMan', { Email, Password });
+        const response = await axios.post('http://192.168.1.3:5000/loginFisherMan', { Email, Password });
   
         console.log('Response from server:', response);
   
@@ -115,7 +115,7 @@ const LoginTrader = () => {
   const handleLogin = async () => {
     if (Email && Password) {
       try {
-        const response = await axios.post('http://192.168.0.137:5000/loginTraders', { Email, Password });
+        const response = await axios.post('http://192.168.1.3:5000/loginTraders', { Email, Password });
   
         console.log('Response from server:', response);
   
@@ -129,7 +129,7 @@ const LoginTrader = () => {
                 console.error('Error saving account ID to AsyncStorage:', error);
               });
             alert('Login successful!');
-            navigation.navigate('homeNelayan');
+            navigation.navigate('homeTrader');
           } else {
             alert(response.data.message);
           }

@@ -13,7 +13,7 @@ const HomeNelayan = () => {
   const fetchProducts = async () => {
     try {
       const accountid = await AsyncStorage.getItem('accountid');
-      const response = await axios.post('http://192.168.0.137:5000/showproduct', { accountid });
+      const response = await axios.post('http://192.168.1.3:5000/showproduct', { accountid });
 
       if (response.status === 200) {
         console.log('Products:', response.data.accounts);
@@ -107,6 +107,107 @@ const HomeNelayan = () => {
   );
 };
 
+const HomeTrader = () => {
+  const navigation = useNavigation();
+  const [products, setProducts] = useState([]);
+
+  const fetchProducts = async () => {
+    try {
+      const accountid = await AsyncStorage.getItem('accountid');
+      const response = await axios.post('http://192.168.1.3:5000/showproduct', { accountid });
+
+      if (response.status === 200) {
+        console.log('Products:', response.data.accounts);
+        setProducts(response.data.accounts);
+      } else {
+        console.error('Error fetching products:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const navigateToShowCart = () => {
+    console.log('Navigating to My Cart...');
+    navigation.navigate('ShowCart');
+  };
+
+  const navigateToAccount = () => {
+    console.log('Navigating to Account...');
+    navigation.navigate('TraderAccount');
+  };
+
+  const navigateToProductDetails = async (productId) => {
+    // Simpan productid ke AsyncStorage sebelum menavigasi ke halaman detail
+    await AsyncStorage.setItem('productid', productId);
+    navigation.navigate('ProductDetailsTrader');
+  };
+
+  const arrayBufferToBase64 = (buffer) => {
+    const binary = new Uint8Array(buffer);
+    const base64String = base64.encode(binary);
+    return 'data:image/png;base64,' + base64String;
+  };
+
+  const renderProductImage = (product) => {
+    console.log('Rendering product image:', product);
+
+    if (product.productimg && product.productimg.data) {
+      try {
+        console.log('Product Image Data:', product.productimg.data);
+        const base64Image = arrayBufferToBase64(product.productimg.data);
+        console.log('Base64 Image:', base64Image);
+        return <Image source={{ uri: base64Image }} style={styles.productImage} />;
+      } 
+      
+      catch (error) {
+        console.error('Error converting image data to base64:', error);
+        return <Text>Error loading image</Text>;
+      }
+      
+    }
+    console.log('No Image Data');
+    return <Text>No Image</Text>;
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.address}>Harbour Address</Text>
+      <Text style={styles.location}>Muara Angke, DKI Jakarta</Text>
+      <TextInput style={styles.searchBar} placeholder="Your Searches here" />
+
+      <FlatList
+        data={products}
+        numColumns={2}
+        keyExtractor={(item) => item.productid}
+        renderItem={({ item }) => (
+          <View style={styles.productContainer}>
+            {renderProductImage(item)}
+            <Text style={styles.details}>{item.productname}</Text>
+            <Text style={styles.details}>{item.productcost}</Text>
+            <TouchableOpacity style={styles.viewDetails} onPress={() => navigateToProductDetails(item.productid)}>
+              <Text style={{ color: 'white', fontSize: 8 }}>View Detail</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      />
+
+      <View style={styles.tabBar}>
+        <TouchableOpacity style={styles.bottomNavButton} onPress={navigateToAddToCart}>
+          <AntDesign name="plus" size={24} color='#3780D1' />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.bottomNavButton} onPress={navigateToAccount}>
+          <AntDesign name="user" size={24} color='#3780D1' />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -163,4 +264,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeNelayan;
+export {HomeNelayan, HomeTrader};

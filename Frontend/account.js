@@ -24,7 +24,7 @@ const FisherManAccount = ({ navigation }) => {
 
                 if (accountid) {
                     // Menggunakan permintaan GET untuk mendapatkan informasi pengguna
-                    axios.post('http://192.168.0.137:5000/showuser', { accountid })
+                    axios.post('http://192.168.1.3:5000/showuser', { accountid })
                         .then((response) => {
                             if (response.status === 200) {
                                 setAccountInfo(response.data.account);
@@ -94,7 +94,7 @@ const TraderAccount = () => {
 
                 if (accountid) {
                     // Menggunakan permintaan GET untuk mendapatkan informasi pengguna
-                    axios.post('http://192.168.0.137:5000/showuser', { accountid })
+                    axios.post('http://192.168.1.3:5000/showuser', { accountid })
                         .then((response) => {
                             if (response.status === 200) {
                                 setAccountInfo(response.data.account);
@@ -121,7 +121,7 @@ const TraderAccount = () => {
                     <AntDesign name="arrowleft" size={24} color='#3780D1' />
                 </TouchableOpacity>
                 <Text style={styles.navTitle}>Account Information</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('homeNelayan')}>
+                <TouchableOpacity onPress={() => navigation.navigate('homeTrader')}>
                     <AntDesign name="home" size={24} color='#3780D1' />
                 </TouchableOpacity>
             </View>
@@ -203,7 +203,7 @@ const EditTraderAccount = () => {
                     <AntDesign name="arrowleft" size={24} color='#3780D1' />
                 </TouchableOpacity>
                 <Text style={styles.navTitle}>Edit Account</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('homeNelayan')}>
+                <TouchableOpacity onPress={() => navigation.navigate('homeTrader')}>
                     <AntDesign name="home" size={24} color='#3780D1' />
                 </TouchableOpacity>
             </View>

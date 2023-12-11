@@ -40,7 +40,7 @@ CREATE TABLE Product (
     AccountID BIGSERIAL, 
     FOREIGN KEY (AccountID) REFERENCES Account(AccountID),
     PostedDate DATE,
-    -- ProductIMG bytea, 
+    ProductIMG bytea, 
     Description VARCHAR(255),
     CatchDate DATE
 );

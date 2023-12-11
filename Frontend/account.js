@@ -23,7 +23,7 @@ const FisherManAccount = ({ navigation }) => {
 
                 if (accountid) {
                     // Menggunakan permintaan GET untuk mendapatkan informasi pengguna
-                    axios.post('http://192.168.1.19:5000/showuser', { accountid })
+                    axios.post('http://192.168.0.137:5000/showuser', { accountid })
                         .then((response) => {
                             if (response.status === 200) {
                                 setAccountInfo(response.data.account);

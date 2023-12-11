@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { encode } from 'base-64';
+import { base64 } from 'base-64';
 
 const HomeNelayan = () => {
   const navigation = useNavigation();
@@ -16,6 +16,7 @@ const HomeNelayan = () => {
       const response = await axios.post('http://192.168.0.137:5000/showproduct', { accountid });
 
       if (response.status === 200) {
+        console.log('Products:', response.data.accounts);
         setProducts(response.data.accounts);
       } else {
         console.error('Error fetching products:', response.data.message);
@@ -45,19 +46,27 @@ const HomeNelayan = () => {
 
   const arrayBufferToBase64 = (buffer) => {
     const binary = new Uint8Array(buffer);
-    const base64 = encode(binary);
-    return 'data:image/png;base64,' + base64;
+    const base64String = base64.encode(binary);
+    return 'data:image/png;base64,' + base64String;
   };
 
   const renderProductImage = (product) => {
     console.log('Rendering product image:', product);
 
     if (product.productimg && product.productimg.data) {
-      const base64Image = arrayBufferToBase64(product.productimg.data);
-      console.log('Base64 Image:', base64Image);
-      return <Image source={{ uri: base64Image }} style={styles.productImage} />;
+      try {
+        console.log('Product Image Data:', product.productimg.data);
+        const base64Image = arrayBufferToBase64(product.productimg.data);
+        console.log('Base64 Image:', base64Image);
+        return <Image source={{ uri: base64Image }} style={styles.productImage} />;
+      } 
+      
+      catch (error) {
+        console.error('Error converting image data to base64:', error);
+        return <Text>Error loading image</Text>;
+      }
+      
     }
-
     console.log('No Image Data');
     return <Text>No Image</Text>;
   };

@@ -106,7 +106,7 @@ const ProductDetailsTrader = () => {
       const productname = await AsyncStorage.getItem('productname');
 
       if (productid && accountid) {
-        const response = await axios.post('http://192.168.0.137:5000/addcart', {
+        const response = await axios.post('http://172.20.10.2:5000/addcart', {
           productid,
           accountid,
           productname
@@ -134,7 +134,7 @@ const ProductDetailsTrader = () => {
         console.log('ID product yang diambil dari AsyncStorage:', productid);
         if (productid) {
           // Menggunakan permintaan POST untuk mendapatkan informasi product
-          axios.post('http://192.168.0.137:5000/showproductID', { productid })
+          axios.post('http://172.20.10.2:5000/showproductID', { productid })
             .then((response) => {
               if (response.data && response.data.accounts && response.data.accounts.length > 0) {
                 setProductInfo(response.data.accounts[0]);

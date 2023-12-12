@@ -73,18 +73,16 @@ CREATE TABLE Orders (
     ProductID BIGSERIAL,
     FOREIGN KEY (AccountID) REFERENCES Account (AccountID),
     FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
-    TotalAmount DECIMAL,
-    OrderDate DATE,
-    DeliveryDate DATE,
-    DeliveryStatus delivery_status_enum
+    TotalAmount DECIMAL
 );
 
 -- Tabel "Payment"
 CREATE TABLE Payment (
     PaymentID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
+    AccountID BIGSERIAL,
     OrderID BIGSERIAL,
+    FOREIGN KEY (AccountID) REFERENCES Account (AccountID),
     FOREIGN KEY (OrderID) REFERENCES Orders (OrderID),
-    Paid BOOLEAN,
     Total DECIMAL,
     Details payment_details_enum
 );

@@ -298,18 +298,17 @@ async function Order(temp) {
     const accountQuery = `SELECT role FROM Account WHERE accountid = ${accountid}`;
     const accountResult = await db.query(accountQuery);
 
-    if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'Traders') {
-      const { accountid, productid, totalamount, orderdate, deliverydate, deliverystatus } = temp;
-      const query = `INSERT INTO orders (accountid, productid, totalamount, orderdate, deliverydate, deliverystatus) VALUES 
-                    ('${accountid}', '${productid}', '${totalamount}','${orderdate}', '${deliverydate}', '${deliverystatus}')`;
+    if (accountResult.rowCount === 1) {
+      const { accountid, productid, totalamount} = temp;
+      const query = `INSERT INTO orders (accountid, productid, totalamount) VALUES ('${accountid}', '${productid}', '${totalamount}')`;
       const result = await db.query(query);
       if (result.rowCount === 1) {
         return {
-          message: 'Order Added'
+         status:200, message: 'Order Added'
         };
       } else {
         return {
-          message: 'Failed to Order product'
+          status:404,message: 'Failed to Order product'
         };
       }
     } else {
@@ -700,23 +699,28 @@ async function payment(temp) {
     const accountResult = await db.query(accountQuery);
 
     if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'Traders') {
-      const { orderid, details } = temp;
+      const { accountid,orderid, details } = temp;
 
-      const query = ` INSERT INTO payment (orderid,total, details) SELECT '${orderid}',
-        (SELECT totalamount FROM Orders WHERE OrderID = '${orderid}') * 
+      const query = `
+      INSERT INTO payment (accountid, orderid, total, details)
+      SELECT
+        '${accountid}',
+        '${orderid}',
+        (SELECT totalamount FROM Orders WHERE OrderID = '${orderid}') *
         (SELECT productcost FROM Product WHERE ProductID = (SELECT ProductID FROM Orders WHERE OrderID = '${orderid}')),
-        '${details}';`;
+        '${details}';
+    `;
 
       console.log('Query:', query);
 
       const result = await db.query(query);
       if (result.rowCount === 1) {
         return {
-          message: 'Payment Added'
+          status:200,message: 'Payment Added'
         };
       } else {
         return {
-          message: 'Failed to Pay product'
+          status:404,message: 'Failed to Pay product'
         };
       }
     } else {

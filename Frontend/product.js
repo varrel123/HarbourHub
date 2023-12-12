@@ -4,7 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { AntDesign } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
 
 const AddProduct = ({ navigation }) => {
     const [productname, setProductName] = useState('');
@@ -41,7 +41,7 @@ const AddProduct = ({ navigation }) => {
             .catch((error) => {
                 console.error('Error retrieving account ID from AsyncStorage:', error);
             });
-    }, []); // The empty dependency array ensures this effect runs once on component mount
+    }, []); 
 
     const handleAddProduct = async () => {
         if (productname && productcost && description && accountid && posteddate && catchdate && productimg) {

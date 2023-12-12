@@ -11,6 +11,8 @@ import { AddProduct, EditProduct } from './product';
 import {ProductDetails, ProductDetailsTrader} from './productDetails';
 import {FisherManAccount,TraderAccount,EditTraderAccount,EditFisherManAccount} from './account';
 import ShowCart from './shoppingCart';
+import Orders from './Order';
+import Payment from './Payment';
 
 
 const Stack = createStackNavigator();
@@ -35,6 +37,8 @@ export default function App() {
         <Stack.Screen name="EditTraderAccount" component={EditTraderAccount} />
         <Stack.Screen name="EditFisherManAccount" component={EditFisherManAccount} />
         <Stack.Screen name="ShowCart" component={ShowCart} />
+        <Stack.Screen name="Order" component={Orders} />
+        <Stack.Screen name="Payment" component={Payment} />
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>

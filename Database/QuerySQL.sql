@@ -48,7 +48,7 @@ CREATE TABLE Product (
 -- Tabel "Shopping_Cart"
 CREATE TABLE Shopping_Cart (
     ShoppingCartID BIGSERIAL PRIMARY KEY,
-    Created DATE,
+    ProductName VARCHAR(255),
     AccountID BIGSERIAL, 
     ProductID BIGSERIAL,
     FOREIGN KEY (ProductID) REFERENCES Product (ProductID),

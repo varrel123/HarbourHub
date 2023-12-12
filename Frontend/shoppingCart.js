@@ -9,11 +9,11 @@ import { encode } from 'base-64';
 const ShowCart = () => {
     const navigation = useNavigation();
     const [products, setProducts] = useState([]);
-  
+
     const fetchProducts = async () => {
       try {
         const accountid = await AsyncStorage.getItem('accountid');
-        const response = await axios.post('http://192.168.1.3:5000/showproduct', { accountid });
+        const response = await axios.post('http://192.168.0.137:5000/showcart', { accountid });
   
         if (response.status === 200) {
           setProducts(response.data.accounts);
@@ -34,9 +34,9 @@ const ShowCart = () => {
       navigation.navigate('Order');
     };
   
-    const navigateToProductDetails = (productId) => {
-      navigation.navigate('ProductDetailsTrader', { productId });
-    };
+    // const navigateToProductDetails = (productId) => {
+    //   navigation.navigate('ProductDetailsTrader', { productId });
+    // };
   
     const arrayBufferToBase64 = (buffer) => {
       const binary = new Uint8Array(buffer);
@@ -69,6 +69,7 @@ const ShowCart = () => {
                 </TouchableOpacity>
             </View>
             <View style={[styles.inputContainer, { paddingHorizontal: 20 }]}>
+
                 <FlatList
                 data={products}
                 numColumns={1}
@@ -76,9 +77,10 @@ const ShowCart = () => {
                 renderItem={({ item }) => (
                     <View style={styles.productContainer}>
                     {renderProductImage(item)}
-                    <Text style={styles.details}>{item.productname}</Text>
-                    <Text style={styles.details}>{item.productcost}/Kg</Text>
-                    <Text style={styles.details}>{item.productid}</Text>
+                    <Text style={styles.details}>Shopping Cart ID: {item.shoppingcartid}</Text>
+                    <Text style={styles.details}>Product Name: {item.productname}</Text>
+                    <Text style={styles.details}>Account ID: {item.accountid}</Text>
+                    <Text style={styles.details}>Product ID:{item.productid}</Text>
                     <TouchableOpacity style={styles.viewDetails} onPress={() => navigateToOrder(item.productid)}>
                         <Text style={{ color: 'white', fontSize: 8}}>Order</Text>
                     </TouchableOpacity>
@@ -88,6 +90,7 @@ const ShowCart = () => {
                     </View>
                 )}
                 />
+
             </View>
       </View>
     );

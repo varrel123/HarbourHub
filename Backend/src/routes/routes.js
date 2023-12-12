@@ -20,6 +20,8 @@ router.post("/showproduct", HBController.ShowProduct);
 
 router.post("/showproductID", HBController.ShowProductID);
 
+router.get("/Allshowproduct", HBController.AllShowProduct);
+
 router.delete("/deleteproduct", HBController.DeleteProduct);
 
 router.put("/updateproduct", HBController.UpdateProduct);
@@ -32,7 +34,7 @@ router.delete("/deleteorders", HBController.DeleteOrder);
 
 router.post("/addcart", HBController.AddCart);
 
-router.get("/showcart", HBController.ShowCart);
+router.post("/showcart", HBController.ShowCart);
 
 router.delete("/deletecart", HBController.DeleteCart);
 

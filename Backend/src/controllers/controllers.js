@@ -72,6 +72,15 @@ async function ShowProduct(req,res){
     }
 }
 
+async function AllShowProduct(req,res){
+    try{
+        const result = await HBService.AllShowProduct(req.body);
+        res.json(result);
+    }catch(err){
+        res.json(err);
+    }
+}
+
 async function ShowProductID(req,res){
     try{
         const result = await HBService.ShowProductID(req.body);
@@ -136,7 +145,7 @@ async function AddCart(req,res){
 
 async function ShowCart(req,res){
     try{
-        const result = await HBService.ShowCart(req.user);
+        const result = await HBService.ShowCart(req.body);
         res.json(result);
     }catch(err){
         res.json(err);
@@ -230,5 +239,6 @@ module.exports = {
     DeleteReview,
     UpdateReview,
     payment,
-    ShowProductID
+    ShowProductID,
+    AllShowProduct
 };

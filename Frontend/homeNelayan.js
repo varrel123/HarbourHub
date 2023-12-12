@@ -13,7 +13,7 @@ const HomeNelayan = () => {
   const fetchProducts = async () => {
     try {
       const accountid = await AsyncStorage.getItem('accountid');
-      const response = await axios.post('http://192.168.1.3:5000/showproduct', { accountid });
+      const response = await axios.post('http://192.168.0.137:5000/showproduct', { accountid });
 
       if (response.status === 200) {
         console.log('Products:', response.data.accounts);
@@ -113,9 +113,7 @@ const HomeTrader = () => {
 
   const fetchProducts = async () => {
     try {
-      const accountid = await AsyncStorage.getItem('accountid');
-      const response = await axios.post('http://192.168.1.3:5000/showproduct', { accountid });
-
+      const response = await axios.get('http://192.168.0.137:5000/Allshowproduct');
       if (response.status === 200) {
         console.log('Products:', response.data.accounts);
         setProducts(response.data.accounts);
@@ -141,11 +139,16 @@ const HomeTrader = () => {
     navigation.navigate('TraderAccount');
   };
 
-  const navigateToProductDetails = async (productId) => {
-    // Simpan productid ke AsyncStorage sebelum menavigasi ke halaman detail
-    await AsyncStorage.setItem('productid', productId);
-    navigation.navigate('ProductDetailsTrader');
-  };
+  const navigateToProductDetails = async (productId, productName) => {
+    // Simpan productid dan productname ke AsyncStorage sebelum menavigasi ke halaman detail
+    try {
+        await AsyncStorage.setItem('productid', productId);
+        await AsyncStorage.setItem('productname', productName);
+        navigation.navigate('ProductDetailsTrader');
+    } catch (error) {
+        console.error('Error saving data to AsyncStorage:', error);
+    }
+};
 
   const arrayBufferToBase64 = (buffer) => {
     const binary = new Uint8Array(buffer);
@@ -189,7 +192,7 @@ const HomeTrader = () => {
             {renderProductImage(item)}
             <Text style={styles.details}>{item.productname}</Text>
             <Text style={styles.details}>{item.productcost}</Text>
-            <TouchableOpacity style={styles.viewDetails} onPress={() => navigateToProductDetails(item.productid)}>
+            <TouchableOpacity style={styles.viewDetails} onPress={() => navigateToProductDetails(item.productid,item.productname)}>
               <Text style={{ color: 'white', fontSize: 8 }}>View Detail</Text>
             </TouchableOpacity>
           </View>
@@ -197,7 +200,7 @@ const HomeTrader = () => {
       />
 
       <View style={styles.tabBar}>
-        <TouchableOpacity style={styles.bottomNavButton} onPress={navigateToAddToCart}>
+        <TouchableOpacity style={styles.bottomNavButton} onPress={navigateToShowCart}>
           <AntDesign name="plus" size={24} color='#3780D1' />
         </TouchableOpacity>
         <TouchableOpacity style={styles.bottomNavButton} onPress={navigateToAccount}>

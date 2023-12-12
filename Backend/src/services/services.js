@@ -169,6 +169,23 @@ async function ShowProduct(temp) {
   }
 }
 
+async function AllShowProduct() {
+  const query = `SELECT * FROM Product`;
+  const result = await db.query(query);
+
+  if (result.rowCount > 0) {
+    return {
+      status: 200,
+      message: 'Product found',
+      accounts: result.rows,
+    };
+  } else {
+    return {
+      message: 'No Product Added',
+    };
+  }
+}
+
 async function ShowProductID(temp) {
   const { productid } = temp;
   const query = `SELECT * FROM Product WHERE productid = '${productid}'`;
@@ -397,15 +414,15 @@ async function DeleteOrder(temp) {
 //============ Shopping Cart ======================
 //=================================================
 async function AddCart(temp) {
-  const { accountid } = temp;
+  const { accountid} = temp;
 
   try {
     const accountQuery = `SELECT role FROM Account WHERE accountid = ${accountid}`;
     const accountResult = await db.query(accountQuery);
 
-    if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'Traders') {
-      const { accountid, productid } = temp;
-      const query = `INSERT INTO Shopping_Cart (accountid, productid ) VALUES ('${accountid}', '${productid}')`;
+    if (accountResult.rowCount === 1 ) {
+      const { accountid, productid,productname } = temp;
+      const query = `INSERT INTO Shopping_Cart (accountid, productid,productname ) VALUES ('${accountid}', '${productid}','${productname}')`;
 
       const result = await db.query(query);
 
@@ -431,8 +448,10 @@ async function AddCart(temp) {
   }
 }
 
-async function ShowCart() {
-  const query = 'SELECT * FROM Shopping_Cart';
+async function ShowCart(temp) {
+
+  const { accountid } = temp;
+  const query = `SELECT * FROM Shopping_Cart WHERE accountid = ${accountid}`;
   const result = await db.query(query);
 
   if (result.rowCount > 0) {
@@ -737,6 +756,7 @@ module.exports = {
   UpdateReview,
   DeleteReview,
   payment,
-  ShowProductID
+  ShowProductID,
+  AllShowProduct
 };
 

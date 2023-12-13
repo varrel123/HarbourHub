@@ -51,8 +51,20 @@ CREATE TABLE Shopping_Cart (
     ProductName VARCHAR(255),
     AccountID BIGSERIAL, 
     ProductID BIGSERIAL,
+    TotalAmount DECIMAL,
     FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
     FOREIGN KEY (AccountID) REFERENCES Account(AccountID)
+);
+
+-- Tabel "Payment"
+CREATE TABLE Payment (
+    PaymentID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
+    AccountID BIGSERIAL,
+    ShoppingCartID BIGSERIAL,
+    FOREIGN KEY (AccountID) REFERENCES Account (AccountID),
+    FOREIGN KEY (ShoppingCartID) REFERENCES Shopping_Cart (ShoppingCartID),
+    Total DECIMAL,
+    Details payment_details_enum
 );
 
 -- Tabel "Reviews"
@@ -66,26 +78,16 @@ CREATE TABLE Reviews (
     Rating INT
 );
 
--- Tabel "Orders"
-CREATE TABLE Orders (
-    OrderID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
-    AccountID BIGSERIAL, -- Kolom untuk kunci asing
-    ProductID BIGSERIAL,
-    FOREIGN KEY (AccountID) REFERENCES Account (AccountID),
-    FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
-    TotalAmount DECIMAL
-);
+-- -- Tabel "Orders"
+-- CREATE TABLE Orders (
+--     OrderID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
+--     AccountID BIGSERIAL, -- Kolom untuk kunci asing
+--     ProductID BIGSERIAL,
+--     FOREIGN KEY (AccountID) REFERENCES Account (AccountID),
+--     FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
+--     TotalAmount DECIMAL
+-- );
 
--- Tabel "Payment"
-CREATE TABLE Payment (
-    PaymentID BIGSERIAL PRIMARY KEY NOT NULL UNIQUE,
-    AccountID BIGSERIAL,
-    OrderID BIGSERIAL,
-    FOREIGN KEY (AccountID) REFERENCES Account (AccountID),
-    FOREIGN KEY (OrderID) REFERENCES Orders (OrderID),
-    Total DECIMAL,
-    Details payment_details_enum
-);
 
 
                     --TESTER--

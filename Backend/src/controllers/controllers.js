@@ -181,7 +181,7 @@ async function AddReview(req,res){
 
 async function ShowReview(req,res){
     try{
-        const result = await HBService.ShowReview(req.user);
+        const result = await HBService.ShowReview(req.body);
         res.json(result);
     }catch(err){
         res.json(err);

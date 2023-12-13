@@ -1,13 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import { AntDesign } from '@expo/vector-icons';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
 
-const Orders = ({ navigation }) => {
+const AddReview = ({ navigation }) => {
     const [accountid, setAccountID] = useState('');
-    const [productid, seteProductid] = useState('');
-    const [totalamount, settotalamount] = useState('');
+    const [productid, setproductid] = useState('');
+    const [reviewcontent, setreviewcontent] = useState('');
+    const [rating, setrating] = useState('');
+
+    useEffect(() => {
+        // Retrieve the account ID from AsyncStorage
+        AsyncStorage.getItem('productid')
+            .then((productid) => {
+                console.log('Retrieved product ID from AsyncStorage:', productid);
+                setproductid(productid); // Set the retrieved account ID to the state
+            })
+            .catch((error) => {
+                console.error('Error retrieving product ID from AsyncStorage:', error);
+            });
+    }, []); 
 
     useEffect(() => {
         // Retrieve the account ID from AsyncStorage
@@ -19,60 +34,35 @@ const Orders = ({ navigation }) => {
             .catch((error) => {
                 console.error('Error retrieving account ID from AsyncStorage:', error);
             });
-    }, []);
+    }, []); 
 
-
-    useEffect(() => {
-        // Retrieve the product ID from AsyncStorage
-        AsyncStorage.getItem('productid')
-            .then((productid) => {
-                console.log('Retrieved product ID from AsyncStorage:', productid);
-                seteProductid(productid); // Set the retrieved product ID to the state
-            })
-            .catch((error) => {
-                console.error('Error retrieving product ID from AsyncStorage:', error);
-            });
-    }, []);
-
-    const handleOrder = async (accountid, productid, totalamount) => {
-        if (accountid && productid && totalamount) {
-            const response = await axios.post('http://172.20.10.2:5000/orders', {
-                accountid,
-                productid,
-                totalamount,
+    const handleAddReview = async () => {
+        if (accountid, productid, reviewcontent, rating) {
+            const response = await axios.post('http://192.168.0.137:5000/addReview', {
+                accountid, 
+                productid, 
+                reviewcontent, 
+                rating,
             })
                 .then(function (response) {
                     console.log(response);
                     if (response.status === 200) {
-                        if (response.data.message === 'Order Added') {
-                            alert('Order successful!');
-                            navigation.navigate('Payment');
+                        if (response.data.message === 'Review Added') {
+                            alert('Review Added successful!');
+                            navigation.navigate('homeTrader');
                         } else {
                             alert(response.data.message);
                         }
                     } else if (response.status === 404) {
-                        alert('Add product Failed!');
+                        alert('Review Added Failed!');
                     }
                 })
                 .catch(function (error) {
                     console.log(error);
-                    alert('Add product failed. Please try again.');
+                    alert('Review Added failed. Please try again.');
                 });
         } else {
             alert('Please fill in all fields.');
-        }
-    };
-
-    const navigateToPayment = async (accountid, productid, totalamount) => {
-        try {
-            const order = await handleOrder(accountid, productid, totalamount);
-
-            if (order) {
-                
-                navigation.navigate('Payment');
-            }
-        } catch (error) {
-            console.error('Error saving data to AsyncStorage or handling order:', error);
         }
     };
 
@@ -82,21 +72,28 @@ const Orders = ({ navigation }) => {
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <AntDesign name="arrowleft" size={24} color='#3780D1' />
                 </TouchableOpacity>
-                <Text style={styles.navTitle}>Order</Text>
+                <Text style={styles.navTitle}>Review</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('homeTrader')}>
+                    <AntDesign name="home" size={24} color='#3780D1' />
+                </TouchableOpacity>
             </View>
             <View style={[styles.inputContainer, { paddingHorizontal: 20 }]}>
-                <Text>Total Amount:</Text>
+                <Text>Review Content:</Text>
                 <TextInput
-                    style={[styles.input, { height: 80 }]}
-                    onChangeText={settotalamount}
-                    value={totalamount}
+                    style={styles.input}
+                    onChangeText={setreviewcontent}
+                    value={reviewcontent}
+                />
+                <Text>Rating:</Text>
+                <TextInput
+                    style={styles.input}
+                    onChangeText={setrating}
+                    value={rating}
+                    keyboardType="numeric"
                 />
             </View>
-            <TouchableOpacity
-                style={[styles.addButton, { paddingHorizontal: 20 }]}
-                onPress={() => navigateToPayment(accountid, productid, totalamount)}
-            >
-                <Text style={{ color: 'white' }}>Add Order</Text>
+            <TouchableOpacity style={[styles.addButton, { paddingHorizontal: 20 }]} onPress={handleAddReview}>
+                <Text style={{ color: 'white' }}>Add Review</Text>
             </TouchableOpacity>
         </View>
     );
@@ -150,4 +147,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Orders;
+export default AddReview;

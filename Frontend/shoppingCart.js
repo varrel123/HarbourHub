@@ -13,7 +13,7 @@ const ShowCart = () => {
     const fetchProducts = async () => {
       try {
         const accountid = await AsyncStorage.getItem('accountid');
-        const response = await axios.post('http://172.20.10.2:5000/showcart', { accountid });
+        const response = await axios.post('http://192.168.0.137:5000/showcart', { accountid });
   
         if (response.status === 200) {
           setProducts(response.data.accounts);
@@ -29,11 +29,12 @@ const ShowCart = () => {
       fetchProducts();
     }, []);
   
-    const navigateToOrder = async(productId, accountid) => {
+    const navigateToPayment = async(productId, accountid,shoppingcartid) => {
+      await AsyncStorage.setItem('shoppingcartid', shoppingcartid);
       await AsyncStorage.setItem('productid', productId);
       await AsyncStorage.setItem('accountid', accountid);
       console.log('Navigating to Order...');
-      navigation.navigate('Order');
+      navigation.navigate('Payment');
     };
   
     const arrayBufferToBase64 = (buffer) => {
@@ -79,8 +80,8 @@ const ShowCart = () => {
                     <Text style={styles.details}>Product Name: {item.productname}</Text>
                     <Text style={styles.details}>Account ID: {item.accountid}</Text>
                     <Text style={styles.details}>Product ID:{item.productid}</Text>
-                    <TouchableOpacity style={styles.viewDetails} onPress={() => navigateToOrder(item.productid,item.accountid)}>
-                        <Text style={{ color: 'white', fontSize: 8}}>Order</Text>
+                    <TouchableOpacity style={styles.viewDetails} onPress={() => navigateToPayment(item.productid, item.accountid, item.shoppingcartid)}>
+                        <Text style={{ color: 'white', fontSize: 8}}>Payment</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.viewDetails} onPress={() => navigateToReview(item.productid)}>
                         <Text style={{ color: 'white', fontSize: 8 }}>Review</Text>

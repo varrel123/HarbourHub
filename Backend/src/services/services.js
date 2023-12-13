@@ -420,14 +420,14 @@ async function AddCart(temp) {
     const accountResult = await db.query(accountQuery);
 
     if (accountResult.rowCount === 1 ) {
-      const { accountid, productid,productname } = temp;
-      const query = `INSERT INTO Shopping_Cart (accountid, productid,productname ) VALUES ('${accountid}', '${productid}','${productname}')`;
+      const { accountid, productid,productname,totalamount } = temp;
+      const query = `INSERT INTO Shopping_Cart (accountid, productid,productname,totalamount) VALUES ('${accountid}', '${productid}','${productname}','${totalamount}')`;
 
       const result = await db.query(query);
 
       if (result.rowCount === 1) {
         return {
-          message: 'Product Added to Cart'
+          status:200,message: 'Product Added to Cart'
         };
       } else {
         return {
@@ -567,7 +567,7 @@ async function AddReview(temp) {
 
       if (result.rowCount === 1) {
         return {
-          message: 'Review Added'
+          status:200,message: 'Review Added'
         };
       } else {
         return {
@@ -587,17 +587,20 @@ async function AddReview(temp) {
   }
 }
 
-async function ShowReview() {
-  const query = 'SELECT * FROM reviews';
+async function ShowReview(temp) {
+  const {productid} = temp;
+  const query = `SELECT * FROM Reviews WHERE productid = '${productid}'`;
   const result = await db.query(query);
 
   if (result.rowCount > 0) {
     return {
+      status:200,
       message: 'Review found',
       accounts: result.rows,
     };
   } else {
     return {
+      status:404,
       message: 'No Review Added',
     };
   }
@@ -690,6 +693,52 @@ async function DeleteReview(temp) {
 //===========================================
 //============ Payment ======================
 //===========================================
+// async function payment(temp) {
+//   const { accountid } = temp;
+//   console.log(temp);
+
+//   try {
+//     const accountQuery = `SELECT role FROM Account WHERE accountid = ${accountid}`;
+//     const accountResult = await db.query(accountQuery);
+
+//     if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'Traders') {
+//       const { accountid,orderid, details } = temp;
+
+//       const query = `
+//       INSERT INTO payment (accountid, orderid, total, details)
+//       SELECT
+//         '${accountid}',
+//         '${orderid}',
+//         (SELECT totalamount FROM Orders WHERE OrderID = '${orderid}') *
+//         (SELECT productcost FROM Product WHERE ProductID = (SELECT ProductID FROM Orders WHERE OrderID = '${orderid}')),
+//         '${details}';
+//     `;
+
+//       console.log('Query:', query);
+
+//       const result = await db.query(query);
+//       if (result.rowCount === 1) {
+//         return {
+//           status:200,message: 'Payment Added'
+//         };
+//       } else {
+//         return {
+//           status:404,message: 'Failed to Pay product'
+//         };
+//       }
+//     } else {
+//       return {
+//         message: 'Unauthorized. You must have the Traders role to Order Payment.'
+//       };
+//     }
+//   } catch (error) {
+//     console.error(error)
+//     return {
+//       message: 'Internal Server Error'
+//     };
+//   }
+// }
+
 async function payment(temp) {
   const { accountid } = temp;
   console.log(temp);
@@ -699,15 +748,15 @@ async function payment(temp) {
     const accountResult = await db.query(accountQuery);
 
     if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'Traders') {
-      const { accountid,orderid, details } = temp;
+      const { accountid,shoppingcartid, details } = temp;
 
       const query = `
-      INSERT INTO payment (accountid, orderid, total, details)
+      INSERT INTO payment (accountid, shoppingcartid, total, details)
       SELECT
         '${accountid}',
-        '${orderid}',
-        (SELECT totalamount FROM Orders WHERE OrderID = '${orderid}') *
-        (SELECT productcost FROM Product WHERE ProductID = (SELECT ProductID FROM Orders WHERE OrderID = '${orderid}')),
+        '${shoppingcartid}',
+        (SELECT totalamount FROM Shopping_Cart WHERE shoppingcartid = '${shoppingcartid}') *
+        (SELECT productcost FROM Product WHERE ProductID = (SELECT ProductID FROM Shopping_Cart WHERE shoppingcartid = '${shoppingcartid}')),
         '${details}';
     `;
 
@@ -735,7 +784,6 @@ async function payment(temp) {
     };
   }
 }
-
 
 module.exports = {
   loginFisherman,

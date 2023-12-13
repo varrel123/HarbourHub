@@ -113,7 +113,7 @@ const HomeTrader = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://172.20.10.2:5000/Allshowproduct');
+      const response = await axios.get('http://192.168.0.137:5000/Allshowproduct');
       if (response.status === 200) {
         console.log('Products:', response.data.accounts);
         setProducts(response.data.accounts);

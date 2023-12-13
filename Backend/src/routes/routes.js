@@ -42,7 +42,7 @@ router.put("/updatecart", HBController.UpdateCart);
 
 router.post("/addReview", HBController.AddReview);
 
-router.get("/showReview", HBController.ShowReview);
+router.post("/showReview", HBController.ShowReview);
 
 router.put("/updateReview", HBController.UpdateReview);
 

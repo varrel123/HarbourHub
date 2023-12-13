@@ -5,37 +5,37 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
 
 const Payment = ({ navigation }) => {
-    const [accountid, setAccountID] = useState(''); // Initialize with a default value or empty string
-    const [orderid, setorderid] = useState(''); // Initialize with a default value or empty string
-    const [details, setDetails] = useState(''); // Rename to camelCase for consistency
+    const [accountid, setAccountID] = useState('');
+    const [shoppingcartid, setShoppingCartID] = useState('');
+    const [details, setDetails] = useState('');
 
     useEffect(() => {
-        // Retrieve the account ID and order ID from AsyncStorage
+        // Retrieve the account ID and ShoppingCartID from AsyncStorage
         AsyncStorage.getItem('accountid')
-            .then((accountid) => {
-                console.log('Retrieved account ID from AsyncStorage:', accountid);
-                setAccountID(accountid);
+            .then((accountId) => {
+                console.log('Retrieved account ID from AsyncStorage:', accountId);
+                setAccountID(accountId);
             })
             .catch((error) => {
                 console.error('Error retrieving account ID from AsyncStorage:', error);
             });
-    
-        AsyncStorage.getItem('orderid')
-            .then((orderid) => {
-                console.log('Retrieved order ID from AsyncStorage:', orderid);
-                setorderid(orderid);
+
+        AsyncStorage.getItem('shoppingcartid')
+            .then((shoppingcartid) => {
+                console.log('Retrieved ShoppingCartID from AsyncStorage:', shoppingcartid);
+                setShoppingCartID(shoppingcartid);
             })
             .catch((error) => {
-                console.error('Error retrieving order ID from AsyncStorage:', error);
+                console.error('Error retrieving ShoppingCartID from AsyncStorage:', error);
             });
-    }, []); // Remove accountid and orderid from the dependency array
+    }, []);
 
-    const handlePayment = async (accountid, orderid, details) => {
+    const handlePayment = async (accountid, shoppingcartid, details) => {
         try {
-            if (accountid && orderid && details) {
-                const response = await axios.post('http://172.20.10.2:5000/pay', {
-                    accountid,    
-                    orderid,
+            if (accountid && shoppingcartid && details) {
+                const response = await axios.post('http://192.168.0.137:5000/pay', {
+                    accountid,
+                    shoppingcartid,
                     details,
                 });
 
@@ -44,7 +44,7 @@ const Payment = ({ navigation }) => {
                 if (response.status === 200) {
                     if (response.data.message === 'Payment Added') {
                         alert('Payment successful!');
-                        navigation.navigate('Reviews');
+                        navigation.navigate('Review');
                     } else {
                         alert(response.data.message);
                     }
@@ -60,12 +60,11 @@ const Payment = ({ navigation }) => {
         }
     };
 
-    
-    const navigateToReview = async (accountid, orderid, details) => {
+    const navigateToReview = async (accountid, shoppingcartid, details) => {
         try {
-            const paymentid = await handlePayment(accountid, orderid, details);
+            const paymentid = await handlePayment(accountid, shoppingcartid, details);
             if (paymentid) {
-                // await AsyncStorage.setItem('orderid', orderid);
+                // await AsyncStorage.setItem('ShoppingCartID', shoppingCartID);
                 // await AsyncStorage.setItem('accountid', accountid);
                 navigation.navigate('Review');
             }
@@ -92,7 +91,7 @@ const Payment = ({ navigation }) => {
             </View>
             <TouchableOpacity
                 style={[styles.addButton, { paddingHorizontal: 20 }]}
-                onPress={() => navigateToReview(accountid, orderid, details)}
+                onPress={() => navigateToReview(accountid, shoppingcartid, details)}
             >
                 <Text style={{ color: 'white' }}>Payment</Text>
             </TouchableOpacity>

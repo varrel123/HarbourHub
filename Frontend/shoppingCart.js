@@ -13,7 +13,7 @@ const ShowCart = () => {
     const fetchProducts = async () => {
       try {
         const accountid = await AsyncStorage.getItem('accountid');
-        const response = await axios.post('http://192.168.0.137:5000/showcart', { accountid });
+        const response = await axios.post('http://172.20.10.2:5000/showcart', { accountid });
   
         if (response.status === 200) {
           setProducts(response.data.accounts);
@@ -80,6 +80,7 @@ const ShowCart = () => {
                     <Text style={styles.details}>Product Name: {item.productname}</Text>
                     <Text style={styles.details}>Account ID: {item.accountid}</Text>
                     <Text style={styles.details}>Product ID:{item.productid}</Text>
+                    <Text style={styles.details}>Total :{item.total}</Text>
                     <TouchableOpacity style={styles.viewDetails} onPress={() => navigateToPayment(item.productid, item.accountid, item.shoppingcartid)}>
                         <Text style={{ color: 'white', fontSize: 8}}>Payment</Text>
                     </TouchableOpacity>

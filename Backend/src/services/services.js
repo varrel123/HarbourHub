@@ -413,25 +413,45 @@ async function DeleteOrder(temp) {
 //============ Shopping Cart ======================
 //=================================================
 async function AddCart(temp) {
-  const { accountid} = temp;
+  const { accountid } = temp;
 
   try {
     const accountQuery = `SELECT role FROM Account WHERE accountid = ${accountid}`;
     const accountResult = await db.query(accountQuery);
 
-    if (accountResult.rowCount === 1 ) {
-      const { accountid, productid,productname,totalamount } = temp;
-      const query = `INSERT INTO Shopping_Cart (accountid, productid,productname,totalamount) VALUES ('${accountid}', '${productid}','${productname}','${totalamount}')`;
+    if (accountResult.rowCount === 1) {
+      const { accountid, productid, productname, totalamount } = temp;
 
-      const result = await db.query(query);
+      // Fetch the ProductCost from the Product table
+      const productQuery = `SELECT ProductCost FROM Product WHERE ProductID = ${productid}`;
+      const productResult = await db.query(productQuery);
 
-      if (result.rowCount === 1) {
-        return {
-          status:200,message: 'Product Added to Cart'
-        };
+      if (productResult.rowCount === 1) {
+        const productCost = productResult.rows[0].productcost;
+
+        // Calculate the Total based on TotalAmount and ProductCost
+        const total = totalamount * productCost;
+
+        const query = `
+          INSERT INTO Shopping_Cart (accountid, productid, productname, totalamount, total)
+          VALUES ('${accountid}', '${productid}', '${productname}', '${totalamount}', '${total}')
+        `;
+
+        const result = await db.query(query);
+
+        if (result.rowCount === 1) {
+          return {
+            status: 200,
+            message: 'Product Added to Cart'
+          };
+        } else {
+          return {
+            message: 'Failed to Add Cart'
+          };
+        }
       } else {
         return {
-          message: 'Failed to Add Cart'
+          message: 'Product not found'
         };
       }
     } else {
@@ -446,6 +466,7 @@ async function AddCart(temp) {
     };
   }
 }
+
 
 async function ShowCart(temp) {
 
@@ -741,35 +762,31 @@ async function DeleteReview(temp) {
 
 async function payment(temp) {
   const { accountid } = temp;
-  console.log(temp);
 
   try {
     const accountQuery = `SELECT role FROM Account WHERE accountid = ${accountid}`;
     const accountResult = await db.query(accountQuery);
 
     if (accountResult.rowCount === 1 && accountResult.rows[0].role === 'Traders') {
-      const { accountid,shoppingcartid, details } = temp;
+      const { accountid, shoppingcartid, details } = temp;
 
       const query = `
-      INSERT INTO payment (accountid, shoppingcartid, total, details)
-      SELECT
-        '${accountid}',
-        '${shoppingcartid}',
-        (SELECT totalamount FROM Shopping_Cart WHERE shoppingcartid = '${shoppingcartid}') *
-        (SELECT productcost FROM Product WHERE ProductID = (SELECT ProductID FROM Shopping_Cart WHERE shoppingcartid = '${shoppingcartid}')),
-        '${details}';
-    `;
+        INSERT INTO payment (accountid, shoppingcartid, details)
+        VALUES ('${accountid}', '${shoppingcartid}', '${details}');
+      `;
 
       console.log('Query:', query);
 
       const result = await db.query(query);
       if (result.rowCount === 1) {
         return {
-          status:200,message: 'Payment Added'
+          status: 200,
+          message: 'Payment Added'
         };
       } else {
         return {
-          status:404,message: 'Failed to Pay product'
+          status: 404,
+          message: 'Failed to Pay product'
         };
       }
     } else {
@@ -784,6 +801,7 @@ async function payment(temp) {
     };
   }
 }
+
 
 module.exports = {
   loginFisherman,

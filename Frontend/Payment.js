@@ -33,7 +33,7 @@ const Payment = ({ navigation }) => {
     const handlePayment = async (accountid, shoppingcartid, details) => {
         try {
             if (accountid && shoppingcartid && details) {
-                const response = await axios.post('http://192.168.0.137:5000/pay', {
+                const response = await axios.post('http://172.20.10.2:5000/pay', {
                     accountid,
                     shoppingcartid,
                     details,

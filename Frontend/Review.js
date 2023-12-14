@@ -38,7 +38,7 @@ const AddReview = ({ navigation }) => {
 
     const handleAddReview = async () => {
         if (accountid, productid, reviewcontent, rating) {
-            const response = await axios.post('http://192.168.0.137:5000/addReview', {
+            const response = await axios.post('http://172.20.10.2:5000/addReview', {
                 accountid, 
                 productid, 
                 reviewcontent, 

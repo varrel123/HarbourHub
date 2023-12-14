@@ -34,7 +34,7 @@ const Cart = ({ navigation }) => {
     const handleAddCart = async () => {
         try {
             if (totalAmount && productid && accountid) {
-                const response = await axios.post('http://192.168.0.137:5000/addcart', {
+                const response = await axios.post('http://172.20.10.2:5000/addcart', {
                     accountid,
                     productid,
                     productname,

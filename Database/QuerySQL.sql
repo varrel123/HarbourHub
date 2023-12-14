@@ -52,6 +52,7 @@ CREATE TABLE Shopping_Cart (
     AccountID BIGSERIAL, 
     ProductID BIGSERIAL,
     TotalAmount DECIMAL,
+    Total DECIMAL,
     FOREIGN KEY (ProductID) REFERENCES Product (ProductID),
     FOREIGN KEY (AccountID) REFERENCES Account(AccountID)
 );
@@ -63,7 +64,6 @@ CREATE TABLE Payment (
     ShoppingCartID BIGSERIAL,
     FOREIGN KEY (AccountID) REFERENCES Account (AccountID),
     FOREIGN KEY (ShoppingCartID) REFERENCES Shopping_Cart (ShoppingCartID),
-    Total DECIMAL,
     Details payment_details_enum
 );
 

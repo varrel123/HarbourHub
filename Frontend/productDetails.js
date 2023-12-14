@@ -19,6 +19,17 @@ const ProductDetails = () => {
     productimg: null, // Assuming productimg is a base64 string
   });
 
+  const renderStars = (rating) => {
+    const filledStars = '★'.repeat(rating);
+    const emptyStars = '☆'.repeat(5 - rating);
+    return (
+      <Text>
+        <Text style={{ color: '#3780D1' }}>{filledStars}</Text>
+        {emptyStars}
+      </Text>
+    );
+  };
+  
   useEffect(() => {
     // Mengambil informasi product berdasarkan productid yang disimpan
     AsyncStorage.getItem('productid')
@@ -26,7 +37,7 @@ const ProductDetails = () => {
         console.log('ID product yang diambil dari AsyncStorage:', productid);
         if (productid) {
           // Menggunakan permintaan POST untuk mendapatkan informasi product
-          axios.post('http://172.20.10.2:5000/showproductID', { productid })
+          axios.post('http://192.168.1.2:5000/showproductID', { productid })
             .then((response) => {
               if (response.data && response.data.accounts && response.data.accounts.length > 0) {
                 setProductInfo(response.data.accounts[0]);
@@ -46,6 +57,35 @@ const ProductDetails = () => {
       });
   }, []);
 
+    useEffect(() => {
+      // Mengambil informasi product berdasarkan productid yang disimpan
+      AsyncStorage.getItem('productid')
+        .then((productid) => {
+          console.log('ID product yang diambil dari AsyncStorage:', productid);
+          if (productid) {
+            // Menggunakan permintaan POST untuk mendapatkan informasi product
+            axios.post('http://192.168.1.2:5000/showReview', { productid })
+              .then((response) => {
+                if (response.data && response.data.accounts) {
+                  setReviewInfo(response.data.accounts); // Change this line
+                } else {
+                  console.error('Kesalahan mengambil product informasi:', response.data.message);
+                }
+              })
+              .catch((error) => {
+                console.error('Kesalahan mengambil product informasi:', error);
+              });
+          } else {
+            console.error('ID product tidak terdefinisi');
+          }
+        })
+        .catch((error) => {
+          console.error('Kesalahan mengambil ID product dari AsyncStorage:', error);
+        });
+    }, []);
+
+  const [ReviewInfo, setReviewInfo] = useState([]);
+
   return (
     <View style={styles.container}>
       <View style={styles.navBar}>
@@ -53,41 +93,88 @@ const ProductDetails = () => {
           <AntDesign name="arrowleft" size={24} color="#3780D1" />
         </TouchableOpacity>
         <Text style={styles.navTitle}>Product Details</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('homeNelayan')}>
+        <TouchableOpacity onPress={() => navigation.navigate('homeTrader')}>
           <AntDesign name="home" size={24} color="#3780D1" />
         </TouchableOpacity>
       </View>
 
       <View style={styles.inputContainer}>
-        {Object.entries(productInfo).map(([key, value]) => (
-          <View style={styles.row} key={key}>
-            {key !== 'productimg' && (
-              <>
-                <Text style={styles.label}>{key}</Text>
-                <Text style={styles.colon}>:</Text>
-                {key === 'posteddate' || key === 'catchdate' ? (
-                  <Text style={styles.info}>{new Date(value).toLocaleDateString()}</Text>
-                ) : (
-                  <Text style={styles.info}>{value}</Text>
-                )}
-              </>
-            )}
+        {productInfo.hasOwnProperty('productimg') && (
+          <View style={styles.row}>
+            <Image source={{ uri: 'https://4.bp.blogspot.com/-HcxBqohShO8/XEDWBFODU_I/AAAAAAAAACE/40-C4_gIA4gLFpMAtl0XtfiRsskQEdyWACLcBGAs/s1600/Ikan%2Btongkol%2Bmemiliki%2Bciri%2Bkhusus.jpg' }}
+              style={styles.productImage}
+            />
           </View>
-        ))}
+        )}
+
+      <View style={styles.inputContainer2}>
+        <Text style={styles.productName}>{productInfo.productname}</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#3780D1' }}>
+          <Text style={styles.productCost}>Rp. {productInfo.productcost}/Kg</Text>
+          <Text style={{ marginLeft: 'auto' }}>{ReviewInfo.length} Reviews</Text>
+        </View>
       </View>
 
-      <TouchableOpacity
-        style={[styles.editButton, { paddingHorizontal: 20 }]}
-        onPress={() => navigation.navigate('EditProduct', { productInfo })}
-      >
-        <Text style={{ color: 'white' }}>Edit Product</Text>
-      </TouchableOpacity>
+        <View style={styles.descriptionContainer}>
+          <Text style={{fontSize:16, paddingHorizontal: 20, color:'#3780D1', fontWeight: 'bold', marginTop: 10 }}>Description</Text>
+            <Text style={{fontSize: 15, paddingHorizontal: 20}}>{productInfo.description}</Text>
+            
+            <View style={styles.row }>
+              <Text style={styles.label}>Caught On</Text>
+              <Text style={styles.colon}>:</Text>
+              {productInfo.hasOwnProperty('catchdate') ? (
+                <Text style={styles.info}> {new Date(productInfo.catchdate).toLocaleDateString()}</Text>
+              ) : (
+                <Text style={styles.info}>Not Available</Text>
+              )}
+            </View>
+
+            <View style={styles.row}>
+              <Text style={styles.label}>Posted On</Text>
+              <Text style={styles.colon}>:</Text>
+              {productInfo.hasOwnProperty('posteddate') ? (
+                <Text style={styles.info}> {new Date(productInfo.posteddate).toLocaleDateString()}</Text>
+              ) : (
+                <Text style={styles.info}>Not Available</Text>
+              )}
+            </View>
+
+        </View>
+
+        <View>  
+          <Text style={styles.reviewLabel}>Review</Text>
+        </View>
+        
+        <FlatList
+          data={ReviewInfo}
+          keyExtractor={(item) => item.accountid.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.reviewContainer} key={item.accountid}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={styles.reviewRating}>Rating: </Text>
+                <Text>{renderStars(item.rating)}</Text>
+              </View>
+              <Text style={styles.reviewContent}>Content: {item.reviewcontent}</Text>
+            </View>
+          )}
+        />
+        <View style={styles.tabBar}>
+          <TouchableOpacity
+              style={[styles.editButton, { paddingHorizontal: 20 }]}
+              onPress={() => navigation.navigate('EditProduct', { productInfo })}
+            >
+              <Text style={{ color: 'white' }}>Edit Product</Text>
+          </TouchableOpacity>
+        </View> 
+      </View>
     </View>
+
   );
 };
 
 const ProductDetailsTrader = () => {
   const navigation = useNavigation();
+  const [showModal, setShowModal] = useState(false);
 
 
   const [productInfo, setProductInfo] = useState({
@@ -99,6 +186,7 @@ const ProductDetailsTrader = () => {
     description: '',
     catchdate: new Date(),
     productimg: null, // Assuming productimg is a base64 string
+    
   });
 
   // const [ReviewInfo, setReviewInfo] = useState({
@@ -115,6 +203,17 @@ const ProductDetailsTrader = () => {
     navigation.navigate('Cart');
   };
 
+  const renderStars = (rating) => {
+    const filledStars = '★'.repeat(rating);
+    const emptyStars = '☆'.repeat(5 - rating);
+    return (
+      <Text>
+        <Text style={{ color: '#3780D1' }}>{filledStars}</Text>
+        {emptyStars}
+      </Text>
+    );
+  };
+
   useEffect(() => {
     // Mengambil informasi product berdasarkan productid yang disimpan
     AsyncStorage.getItem('productid')
@@ -122,7 +221,7 @@ const ProductDetailsTrader = () => {
         console.log('ID product yang diambil dari AsyncStorage:', productid);
         if (productid) {
           // Menggunakan permintaan POST untuk mendapatkan informasi product
-          axios.post('http://172.20.10.2:5000/showproductID', { productid })
+          axios.post('http://192.168.1.2:5000/showproductID', { productid })
             .then((response) => {
               if (response.data && response.data.accounts && response.data.accounts.length > 0) {
                 setProductInfo(response.data.accounts[0]);
@@ -149,7 +248,7 @@ const ProductDetailsTrader = () => {
         console.log('ID product yang diambil dari AsyncStorage:', productid);
         if (productid) {
           // Menggunakan permintaan POST untuk mendapatkan informasi product
-          axios.post('http://172.20.10.2:5000/showReview', { productid })
+          axios.post('http://192.168.1.2:5000/showReview', { productid })
             .then((response) => {
               if (response.data && response.data.accounts) {
                 setReviewInfo(response.data.accounts); // Change this line
@@ -180,45 +279,75 @@ const ProductDetailsTrader = () => {
           <AntDesign name="home" size={24} color="#3780D1" />
         </TouchableOpacity>
       </View>
-      
+
       <View style={styles.inputContainer}>
-        {Object.entries(productInfo).map(([key, value]) => (
-          <View style={styles.row} key={key}>
-            {key !== 'productimg' && (
-              <>
-                <Text style={styles.label}>{key}</Text>
-                <Text style={styles.colon}>:</Text>
-                {key === 'posteddate' || key === 'catchdate' ? (
-                  <Text style={styles.info}>{new Date(value).toLocaleDateString()}</Text>
-                ) : (
-                  <Text style={styles.info}>{value}</Text>
-                )}
-              </>
-            )}
-          </View>
-        ))}
-      </View>
-
-      <TouchableOpacity
-        style={[styles.editButton, { paddingHorizontal: 20 }]}
-        onPress={navigateToaddCart}
-      >
-        <Text style={{ color: 'white' }}>Add to Cart</Text>
-      </TouchableOpacity>
-
-      {/* Menampilkan FlatList untuk reviewInfo */}
-      <FlatList
-        data={ReviewInfo}
-        keyExtractor={(item) => item.accountid.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.reviewContainer} key={item.accountid}>
-            <Text style={styles.reviewLabel}>Review</Text>
-            <Text style={styles.reviewContent}>Content: {item.reviewcontent}</Text>
-            <Text style={styles.reviewRating}>Rating: {item.rating}</Text>
+        {productInfo.hasOwnProperty('productimg') && (
+          <View style={styles.row}>
+            <Image source={{ uri: 'https://4.bp.blogspot.com/-HcxBqohShO8/XEDWBFODU_I/AAAAAAAAACE/40-C4_gIA4gLFpMAtl0XtfiRsskQEdyWACLcBGAs/s1600/Ikan%2Btongkol%2Bmemiliki%2Bciri%2Bkhusus.jpg' }}
+              style={styles.productImage}
+            />
           </View>
         )}
-      />
+
+      <View style={styles.inputContainer2}>
+        <Text style={styles.productName}>{productInfo.productname}</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#3780D1' }}>
+          <Text style={styles.productCost}>Rp. {productInfo.productcost}/Kg</Text>
+          <Text style={{ marginLeft: 'auto' }}>{ReviewInfo.length} Reviews</Text>
+        </View>
+      </View>
+
+        <View style={styles.descriptionContainer}>
+          <Text style={{fontSize:16, paddingHorizontal: 20, color:'#3780D1', fontWeight: 'bold', marginTop: 10 }}>Description</Text>
+            <Text style={{fontSize: 15, paddingHorizontal: 20}}>{productInfo.description}</Text>
+            
+            <View style={styles.row }>
+              <Text style={styles.label}>Caught On</Text>
+              <Text style={styles.colon}>:</Text>
+              {productInfo.hasOwnProperty('catchdate') ? (
+                <Text style={styles.info}> {new Date(productInfo.catchdate).toLocaleDateString()}</Text>
+              ) : (
+                <Text style={styles.info}>Not Available</Text>
+              )}
+            </View>
+
+            <View style={styles.row}>
+              <Text style={styles.label}>Posted On</Text>
+              <Text style={styles.colon}>:</Text>
+              {productInfo.hasOwnProperty('posteddate') ? (
+                <Text style={styles.info}> {new Date(productInfo.posteddate).toLocaleDateString()}</Text>
+              ) : (
+                <Text style={styles.info}>Not Available</Text>
+              )}
+            </View>
+
+        </View>
+
+        <View>  
+          <Text style={styles.reviewLabel}>Review</Text>
+        </View>
+        
+        <FlatList
+          data={ReviewInfo}
+          keyExtractor={(item) => item.accountid.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.reviewContainer} key={item.accountid}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={styles.reviewRating}>Rating: </Text>
+                <Text>{renderStars(item.rating)}</Text>
+              </View>
+              <Text style={styles.reviewContent}>Content: {item.reviewcontent}</Text>
+            </View>
+          )}
+        />
+        <View style={styles.tabBar}>
+            <TouchableOpacity style={[styles.editButton]} onPress={navigateToaddCart}>
+              <Text style={{ color: 'white' }}>Add to Cart</Text>
+            </TouchableOpacity>
+        </View> 
+      </View>
     </View>
+
   );
 };
 
@@ -233,7 +362,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: '#3780D1',
   },
   navTitle: {
     fontSize: 18,
@@ -243,53 +372,71 @@ const styles = StyleSheet.create({
   inputContainer: {
     flex: 1,
     marginTop: 20,
+  },
+  inputContainer2: {
     paddingHorizontal: 20,
+    marginTop: 10
+  },
+  descriptionContainer:{
   },
   row: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  label: {
-    flex: 1,
-    fontWeight: 'bold',
-  },
-  colon: {
-    marginHorizontal: 5,
+    paddingHorizontal: 20
   },
   info: {
-    flex: 2,
   },
   productImage: {
-    width: 100,
-    height: 100,
-    resizeMode: 'cover',
+    width: 200, // Adjust the width percentage as needed
+    height: 200, // Adjust the height percentage as needed
+    marginLeft: '25%', // Adjust horizontal margin percentage as needed
   },
   editButton: {
     backgroundColor: '#3780D1',
     paddingVertical: 10,
     alignItems: 'center',
-    marginTop: 20,
     borderRadius: 5,
     alignSelf: 'center',
+    width: 150
   },
   reviewContainer: {
-    marginBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-    paddingVertical: 10,
+    marginBottom: 5,
+    borderWidth: 1,
+    borderColor: '#3780D1',
+    marginHorizontal: 20,
+    borderRadius: 10,
+    paddingVertical: 5
   },
   reviewLabel: {
     fontSize: 16,
     fontWeight: 'bold',
+    paddingHorizontal: 20,
+    marginTop: 20,
+    marginBottom: 10,
+    color: '#3780D1'
   },
   reviewContent: {
     fontSize: 14,
     marginTop: 5,
+    paddingHorizontal: 20,
   },
   reviewRating: {
     fontSize: 14,
     marginTop: 5,
+    paddingHorizontal: 20,
+  },
+  productName:{
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#3780D1'
+  },
+  productCost:{
+    fontSize: 16,
+  },
+  tabBar: {
+    height: 60,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
   },
 });
 

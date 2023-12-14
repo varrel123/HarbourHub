@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity,FlatList, Modal } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,7 +8,30 @@ import { Picker } from '@react-native-picker/picker';
 const Payment = ({ navigation }) => {
     const [accountid, setAccountID] = useState('');
     const [shoppingcartid, setShoppingCartID] = useState('');
-    const [details, setDetails] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
+    const [details, setDetails] = useState('Select a payment method');
+
+
+    const paymentMethods = [
+        { label: 'Select a payment method', value: '' },
+        { label: 'Credit Card', value: 'Credit Card' },
+        { label: 'Debit Card', value: 'Debit Card' },
+        { label: 'PayPal', value: 'PayPal' },
+        { label: 'Bank Transfer', value: 'Bank Transfer' },
+        { label: 'Cash', value: 'Cash' },
+    ];
+
+    const handleSelect = (itemValue) => {
+        console.log('Selected item value:', itemValue);
+        setDetails(itemValue);
+        setModalVisible(false);
+    };
+    
+      const renderDropdownItem = ({ item }) => (
+        <TouchableOpacity style={styles.dropdownItem} onPress={() => handleSelect(item.label)}>
+          <Text style={{ color: '#3780D1' }}>{item.label}</Text>
+        </TouchableOpacity>
+    );
 
     useEffect(() => {
         // Retrieve the account ID and ShoppingCartID from AsyncStorage
@@ -34,7 +57,7 @@ const Payment = ({ navigation }) => {
     const handlePayment = async (accountid, shoppingcartid, details) => {
         try {
             if (accountid && shoppingcartid && details) {
-                const response = await axios.post('http://172.20.10.2:5000/pay', {
+                const response = await axios.post('http://192.168.1.2:5000/pay', {
                     accountid,
                     shoppingcartid,
                     details,
@@ -72,37 +95,48 @@ const Payment = ({ navigation }) => {
         }
     };
 
+
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={styles.navBar}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <AntDesign name="arrowleft" size={24} color='#3780D1' />
                 </TouchableOpacity>
+                <Text style={styles.navTitle}>Payment</Text>
                 <Text style={styles.navTitle}></Text>
             </View>
-            <View style={[styles.inputContainer, { paddingHorizontal: 70 }]}>
-            <Text style={{ color: '#3780D1', marginRight: 10, fontSize: 16, fontWeight: 'bold' }}>                Payment Method:</Text>
-                <Picker
-                    selectedValue={details}
-                    style={{ height: 50, width: 250 }}
-                    onValueChange={(itemValue, itemIndex) => {
-                        console.log('Selected item index:', itemIndex);
-                        setDetails(itemValue);
-                    }}
+            <View style={[styles.inputContainer]}>
+                <Text style={{ color: '#3780D1', fontSize: 16, fontWeight: 'bold' }}>Payment Method:</Text>
+                <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.input}>
+                    <Text style={{ color: '#3780D1' }}>{details}</Text>
+                </TouchableOpacity>
+
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => setModalVisible(false)}
                 >
-                    <Picker.Item label="Credit Card" value="Credit Card" />
-                    <Picker.Item label="Debit Card" value="Debit Card" />
-                    <Picker.Item label="PayPal" value="PayPal" />
-                    <Picker.Item label="Bank Transfer" value="Bank Transfer" />
-                    <Picker.Item label="Cash" value="Cash" />
-                </Picker>
+                    <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <FlatList
+                        data={paymentMethods}
+                        renderItem={renderDropdownItem}
+                        keyExtractor={(item) => item.label}
+                        contentContainerStyle={styles.dropdownList}
+                        />
+                    </View>
+                    </View>
+                </Modal>
             </View>
-            <TouchableOpacity
-                style={[styles.addButton, { paddingHorizontal: 50 }]}
-                onPress={() => navigateToReview(accountid, shoppingcartid, details)}
-            >
-                <Text style={{ color: 'white' }}>Checkout</Text>
-            </TouchableOpacity>
+            <View style={styles.tabBar}>
+                <TouchableOpacity
+                    style={[styles.addButton]}
+                    onPress={() => navigateToReview(accountid, shoppingcartid, details)}
+                >
+                    <Text style={{ color: 'white' }}>Checkout</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };
@@ -126,14 +160,16 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         marginBottom: 60,
+        paddingHorizontal: 20
     },
     input: {
+        marginVertical: 10,
         height: 40,
-        borderColor: 'gray',
         borderWidth: 1,
         paddingHorizontal: 10,
         marginBottom: 10,
         borderRadius: 8,
+        borderColor: '#3780D1'
     },
     pickImageButton: {
         backgroundColor: '#3780D1',
@@ -144,15 +180,45 @@ const styles = StyleSheet.create({
         height: 40,
     },
     addButton: {
-        position: 'absolute',
-        bottom: 40, // Atur jarak dari bawah layar
-        left: '6%', // Pusatkan tombol di tengah layar
         backgroundColor: '#3780D1',
-        padding: 20,
-        borderRadius: 8,
-        width: 350,
+        paddingVertical: 10,
         alignItems: 'center',
+        borderRadius: 5,
+        alignSelf: 'center',
+        width: 150
     },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      },
+      modalContent: {
+        width: 250,
+        backgroundColor: 'white',
+        borderRadius: 5,
+        marginTop: 10
+      },
+      dropdownList: {
+        borderRadius: 5,
+      },
+      dropdownItem: {
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#DDD',
+      },
+      tabBar: {
+        height: 60,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: '#fff',
+      },
 });
 
 export default Payment;

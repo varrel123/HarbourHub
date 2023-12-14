@@ -11,10 +11,48 @@ const HomeNelayan = () => {
   const navigation = useNavigation();
   const [products, setProducts] = useState([]);
 
+  const [accountInfo, setAccountInfo] = useState({
+      accountid: 0,
+      name: '',
+      email: '',
+      password: '',
+      address: '',
+      phone: 0,
+      role: '',
+  });
+
+useEffect(() => {
+      // Mengambil informasi akun berdasarkan accountid yang disimpan
+      AsyncStorage.getItem('accountid')
+          .then((accountid) => {
+              console.log('ID akun yang diambil dari AsyncStorage:', accountid);
+
+              if (accountid) {
+                  // Menggunakan permintaan GET untuk mendapatkan informasi pengguna
+                  axios.post('http://192.168.1.2:5000/showuser', { accountid })
+                      .then((response) => {
+                          if (response.status === 200) {
+                              setAccountInfo(response.data.account);
+                          } else {
+                              console.error('Kesalahan mengambil informasi akun:', response.data.message);
+                          }
+                      })
+                      .catch((error) => {
+                          console.error('Kesalahan mengambil informasi akun:', error);
+                      });
+              } else {
+                  console.error('ID Akun tidak terdefinisi');
+              }
+          })
+          .catch((error) => {
+              console.error('Kesalahan mengambil ID akun dari AsyncStorage:', error);
+          });
+  }, []);
+
   const fetchProducts = async () => {
     try {
       const accountid = await AsyncStorage.getItem('accountid');
-      const response = await axios.post('http://172.20.10.2:5000/showproduct', { accountid });
+      const response = await axios.post('http://192.168.1.2:5000/showproduct', { accountid });
 
       if (response.status === 200) {
         console.log('Products:', response.data.accounts);
@@ -76,9 +114,14 @@ const HomeNelayan = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.address}>Harbour Address</Text>
-      <Text style={styles.location}>Muara Angke, DKI Jakarta</Text>
-      <TextInput style={styles.searchBar} placeholder="Your Searches here" />
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, marginBottom: 0 }}>
+        <Text style={{color: '#3780D1', fontWeight: 'bold'}}>Trader Address </Text>
+        <Text style={{marginLeft: 'auto', color: '#3780D1', fontWeight:'bold'}}>{accountInfo.role}</Text>
+      </View>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#3780D1', paddingHorizontal: 20 }}>
+        <Text style={{marginBottom: 5}}>{accountInfo.address}</Text>
+        <Text style={{marginLeft: 'auto',marginBottom: 5}}>{accountInfo.name}</Text>
+      </View>
 
       <FlatList
         data={products}
@@ -87,10 +130,10 @@ const HomeNelayan = () => {
         renderItem={({ item }) => (
           <View style={styles.productContainer}>
             {renderProductImage(item)}
-            <Text style={styles.details}>{item.productname}</Text>
+            <Text style={{    fontSize: 14, textAlign: 'center', color: '#3780D1', fontWeight: 'bold'}}>{item.productname}</Text>
             <Text style={styles.details}>Rp.{item.productcost}/kg</Text>
-            <TouchableOpacity style={styles.viewDetails} onPress={() => navigateToProductDetails(item.productid)}>
-              <Text style={{ color: 'white', fontSize: 8 }}>View Detail</Text>
+            <TouchableOpacity style={styles.viewDetails} onPress={() => navigateToProductDetails(item.productid, item.productname)}>
+              <Text style={{ color: 'white'}}>View Detail</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -112,9 +155,47 @@ const HomeTrader = () => {
   const navigation = useNavigation();
   const [products, setProducts] = useState([]);
 
+    const [accountInfo, setAccountInfo] = useState({
+        accountid: 0,
+        name: '',
+        email: '',
+        password: '',
+        address: '',
+        phone: 0,
+        role: '',
+    });
+
+    useEffect(() => {
+        // Mengambil informasi akun berdasarkan accountid yang disimpan
+        AsyncStorage.getItem('accountid')
+            .then((accountid) => {
+                console.log('ID akun yang diambil dari AsyncStorage:', accountid);
+
+                if (accountid) {
+                    // Menggunakan permintaan GET untuk mendapatkan informasi pengguna
+                    axios.post('http://192.168.1.2:5000/showuser', { accountid })
+                        .then((response) => {
+                            if (response.status === 200) {
+                                setAccountInfo(response.data.account);
+                            } else {
+                                console.error('Kesalahan mengambil informasi akun:', response.data.message);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Kesalahan mengambil informasi akun:', error);
+                        });
+                } else {
+                    console.error('ID Akun tidak terdefinisi');
+                }
+            })
+            .catch((error) => {
+                console.error('Kesalahan mengambil ID akun dari AsyncStorage:', error);
+            });
+    }, []);
+
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://172.20.10.2:5000/Allshowproduct');
+      const response = await axios.get('http://192.168.1.2:5000/Allshowproduct');
       if (response.status === 200) {
         console.log('Products:', response.data.accounts);
         setProducts(response.data.accounts);
@@ -179,9 +260,14 @@ const HomeTrader = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.address}>Harbour Address</Text>
-      <Text style={styles.location}>Muara Angke, DKI Jakarta</Text>
-      <TextInput style={styles.searchBar} placeholder="Your Searches here" />
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, marginBottom: 0 }}>
+        <Text style={{color: '#3780D1', fontWeight: 'bold'}}>Trader Address </Text>
+        <Text style={{marginLeft: 'auto', color: '#3780D1', fontWeight:'bold'}}>{accountInfo.role}</Text>
+      </View>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#3780D1', paddingHorizontal: 20 }}>
+        <Text style={{marginBottom: 5}}>{accountInfo.address}</Text>
+        <Text style={{marginLeft: 'auto',marginBottom: 5}}>{accountInfo.name}</Text>
+      </View>
 
       <FlatList
         data={products}
@@ -190,10 +276,10 @@ const HomeTrader = () => {
         renderItem={({ item }) => (
           <View style={styles.productContainer}>
             {renderProductImage(item)}
-            <Text style={styles.details}>{item.productname}</Text>
+            <Text style={{    fontSize: 14, textAlign: 'center', color: '#3780D1', fontWeight: 'bold'}}>{item.productname}</Text>
             <Text style={styles.details}>Rp.{item.productcost}/kg</Text>
             <TouchableOpacity style={styles.viewDetails} onPress={() => navigateToProductDetails(item.productid, item.productname)}>
-              <Text style={{ color: 'white', fontSize: 8 }}>View Detail</Text>
+              <Text style={{ color: 'white'}}>View Detail</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -201,7 +287,7 @@ const HomeTrader = () => {
 
       <View style={styles.tabBar}>
         <TouchableOpacity style={styles.bottomNavButton} onPress={navigateToShowCart}>
-          <AntDesign name="plus" size={24} color='#3780D1' />
+          <AntDesign name="shoppingcart" size={24} color='#3780D1' />
         </TouchableOpacity>
         <TouchableOpacity style={styles.bottomNavButton} onPress={navigateToAccount}>
           <AntDesign name="user" size={24} color='#3780D1' />
@@ -214,38 +300,25 @@ const HomeTrader = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
+    backgroundColor: 'white',
   },
   viewDetails: {
     backgroundColor: '#3780D1',
-    padding: 10,
-    marginRight: 10,
     borderRadius: 8,
     width: 150,
     height: 30,
     alignItems: 'center',
-  },
-  address: {
-    fontSize: 12,
-    textAlign: 'left',
-    margin: 10,
-  },
-  location: {
-    fontSize: 14,
-    textAlign: 'left',
-    margin: 10,
-  },
-  searchBar: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    margin: 10,
+    justifyContent: 'center',
   },
   productContainer: {
     padding: 5,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    borderColor: '#3780D1',
+    borderWidth: 1,
+    margin: 20,
+    borderRadius: 15
   },
   productImage: {
     width: 150,

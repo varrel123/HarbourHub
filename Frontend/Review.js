@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Modal } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { AntDesign } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -11,8 +11,9 @@ import { Picker } from '@react-native-picker/picker';
 const AddReview = ({ navigation }) => {
     const [accountid, setAccountID] = useState('');
     const [productid, setproductid] = useState('');
-    const [reviewcontent, setreviewcontent] = useState('');
-    const [rating, setrating] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
+    const [reviewcontent, setReviewContent] = useState('');
+    const [rating, setRating] = useState('1');
 
     useEffect(() => {
         // Retrieve the account ID from AsyncStorage
@@ -40,7 +41,7 @@ const AddReview = ({ navigation }) => {
 
     const handleAddReview = async () => {
         if (accountid, productid, reviewcontent, rating) {
-            const response = await axios.post('http://172.20.10.2:5000/addReview', {
+            const response = await axios.post('http://192.168.1.2:5000/addReview', {
                 accountid,
                 productid,
                 reviewcontent,
@@ -68,6 +69,18 @@ const AddReview = ({ navigation }) => {
         }
     };
 
+    const handleSelect = (itemValue) => {
+        console.log('Selected item value:', itemValue);
+        setRating(itemValue);
+        setModalVisible(false);
+    };
+    
+      const renderDropdownItem = (value) => (
+        <TouchableOpacity style={styles.dropdownItem} onPress={() => handleSelect(value)}>
+          <Text style={{ color: '#3780D1' }}>{value}</Text>
+        </TouchableOpacity>
+    );
+
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={styles.navBar}>
@@ -80,34 +93,37 @@ const AddReview = ({ navigation }) => {
                 </TouchableOpacity>
             </View>
             <View style={[styles.inputContainer, { paddingHorizontal: 20 }]}>
-            <Text style={{ marginRight: 10, fontSize: 16, fontWeight: 'bold' }}>Review Content:</Text>
+                <Text style={{ marginRight: 10, fontSize: 16, fontWeight: 'bold' }}>Review Content:</Text>
                 <TextInput
-                    style={styles.input}
-                    onChangeText={setreviewcontent}
-                    value={reviewcontent}
+                style={styles.input}
+                onChangeText={setReviewContent}
+                value={reviewcontent}
                 />
+                <TouchableOpacity onPress={() => setModalVisible(true)}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Text style={{ marginRight: 10, fontSize: 16, fontWeight: 'bold' }}>Rate:</Text>
-                    <Picker
-                        selectedValue={rating}
-                        style={{ height: 50, width: 250 }}
-                        onValueChange={(itemValue, itemIndex) => {
-                            console.log('Selected item index:', itemIndex);
-                            setrating(itemValue);
-                        }}
-                    >
-                        <Picker.Item label="1" value="1" />
-                        <Picker.Item label="2" value="2" />
-                        <Picker.Item label="3" value="3" />
-                        <Picker.Item label="4" value="4" />
-                        <Picker.Item label="5" value="5" />
-                    </Picker>
+                    <Text style={{ color: '#3780D1' }}>{rating}</Text>
                 </View>
-
+                </TouchableOpacity>
             </View>
-            <TouchableOpacity style={[styles.addButton, { paddingHorizontal: 20 }]} onPress={handleAddReview}>
-                <Text style={{ color: 'white' }}>Add Review</Text>
-            </TouchableOpacity>
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalContainer}>
+                <View style={styles.modalContent}>
+                    {[1, 2, 3, 4, 5].map((value) => renderDropdownItem(value.toString()))}
+                </View>
+                </View>
+            </Modal>
+            <View style={styles.tabBar}>
+                <TouchableOpacity style={[styles.addButton, { paddingHorizontal: 20 }]} onPress={handleAddReview}>
+                    <Text style={{ color: 'white' }}>Add Review</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };
@@ -149,15 +165,42 @@ const styles = StyleSheet.create({
         height: 40,
     },
     addButton: {
-        position: 'absolute',
-        bottom: 20, // Atur jarak dari bawah layar
-        left: '8%', // Pusatkan tombol di tengah layar
         backgroundColor: '#3780D1',
-        padding: 10,
-        borderRadius: 8,
-        width: 350,
+        paddingVertical: 10,
         alignItems: 'center',
+        borderRadius: 5,
+        alignSelf: 'center',
+        width: 150
     },
+    tabBar: {
+        height: 60,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: '#fff'
+      },
+      modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      },
+      modalContent: {
+        width: 250,
+        backgroundColor: 'white',
+        borderRadius: 5,
+        paddingVertical: 10,
+      },
+      dropdownItem: {
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#DDD',
+      },
 });
 
 export default AddReview;

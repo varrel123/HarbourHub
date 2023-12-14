@@ -93,7 +93,6 @@ const ShowCart = () => {
     );
   };
 
- 
   const styles = StyleSheet.create({
     container: {
       flex: 1,

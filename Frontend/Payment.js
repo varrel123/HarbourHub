@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Picker } from '@react-native-picker/picker';
 
 const Payment = ({ navigation }) => {
     const [accountid, setAccountID] = useState('');
@@ -70,22 +71,31 @@ const Payment = ({ navigation }) => {
             console.error('Error saving data to AsyncStorage or handling order:', error);
         }
     };
-    
+
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={styles.navBar}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <AntDesign name="arrowleft" size={24} color='#3780D1' />
                 </TouchableOpacity>
-                <Text style={styles.navTitle}>Payment</Text>
+                <Text style={styles.navTitle}></Text>
             </View>
-            <View style={[styles.inputContainer, { paddingHorizontal: 20 }]}>
-                <Text>Payment Method:</Text>
-                <TextInput
-                    style={[styles.input, { height: 50 }]}
-                    onChangeText={setDetails}
-                    value={details}
-                />
+            <View style={[styles.inputContainer, { paddingHorizontal: 70 }]}>
+            <Text style={{ color: '#3780D1', marginRight: 10, fontSize: 16, fontWeight: 'bold' }}>                Payment Method:</Text>
+                <Picker
+                    selectedValue={details}
+                    style={{ height: 50, width: 250 }}
+                    onValueChange={(itemValue, itemIndex) => {
+                        console.log('Selected item index:', itemIndex);
+                        setDetails(itemValue);
+                    }}
+                >
+                    <Picker.Item label="Credit Card" value="Credit Card" />
+                    <Picker.Item label="Debit Card" value="Debit Card" />
+                    <Picker.Item label="PayPal" value="PayPal" />
+                    <Picker.Item label="Bank Transfer" value="Bank Transfer" />
+                    <Picker.Item label="Cash" value="Cash" />
+                </Picker>
             </View>
             <TouchableOpacity
                 style={[styles.addButton, { paddingHorizontal: 50 }]}
@@ -115,7 +125,7 @@ const styles = StyleSheet.create({
         color: '#3780D1'
     },
     inputContainer: {
-        marginBottom: 30,
+        marginBottom: 60,
     },
     input: {
         height: 40,

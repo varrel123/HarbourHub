@@ -24,7 +24,7 @@ const FisherManAccount = ({ navigation }) => {
 
                 if (accountid) {
                     // Menggunakan permintaan GET untuk mendapatkan informasi pengguna
-                    axios.post('http://192.168.1.3:5000/showuser', { accountid })
+                    axios.post('http://172.20.10.2:5000/showuser', { accountid })
                         .then((response) => {
                             if (response.status === 200) {
                                 setAccountInfo(response.data.account);
@@ -94,7 +94,7 @@ const TraderAccount = () => {
 
                 if (accountid) {
                     // Menggunakan permintaan GET untuk mendapatkan informasi pengguna
-                    axios.post('http://192.168.1.3:5000/showuser', { accountid })
+                    axios.post('http://172.20.10.2:5000/showuser', { accountid })
                         .then((response) => {
                             if (response.status === 200) {
                                 setAccountInfo(response.data.account);
@@ -302,7 +302,7 @@ const EditFisherManAccount = ({ navigation }) => {
     const handleEditAccount = async () => {
         if (accountid && Name && Email && Password && Address && Phone && Role) {
             // Modify the request to include the user's information
-            const response = await axios.put('http://192.168.1.19:5000/updateaccount', {
+            const response = await axios.put('http://172.20.10.2:5000/updateaccount', {
                 accountid,
                 Name,
                 Email,
@@ -424,7 +424,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         width: 100,
         padding: 10,
-        paddingRight: 5,
+        paddingRight: 10,
     },
     colon: {
         padding: 10,

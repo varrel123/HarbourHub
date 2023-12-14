@@ -4,7 +4,9 @@ import * as ImagePicker from 'expo-image-picker';
 import { AntDesign } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Picker } from '@react-native-picker/picker';
+
 
 const AddReview = ({ navigation }) => {
     const [accountid, setAccountID] = useState('');
@@ -22,7 +24,7 @@ const AddReview = ({ navigation }) => {
             .catch((error) => {
                 console.error('Error retrieving product ID from AsyncStorage:', error);
             });
-    }, []); 
+    }, []);
 
     useEffect(() => {
         // Retrieve the account ID from AsyncStorage
@@ -34,14 +36,14 @@ const AddReview = ({ navigation }) => {
             .catch((error) => {
                 console.error('Error retrieving account ID from AsyncStorage:', error);
             });
-    }, []); 
+    }, []);
 
     const handleAddReview = async () => {
         if (accountid, productid, reviewcontent, rating) {
             const response = await axios.post('http://172.20.10.2:5000/addReview', {
-                accountid, 
-                productid, 
-                reviewcontent, 
+                accountid,
+                productid,
+                reviewcontent,
                 rating,
             })
                 .then(function (response) {
@@ -78,19 +80,30 @@ const AddReview = ({ navigation }) => {
                 </TouchableOpacity>
             </View>
             <View style={[styles.inputContainer, { paddingHorizontal: 20 }]}>
-                <Text>Review Content:</Text>
+            <Text style={{ marginRight: 10, fontSize: 16, fontWeight: 'bold' }}>Review Content:</Text>
                 <TextInput
                     style={styles.input}
                     onChangeText={setreviewcontent}
                     value={reviewcontent}
                 />
-                <Text>Rating:</Text>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={setrating}
-                    value={rating}
-                    keyboardType="numeric"
-                />
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={{ marginRight: 10, fontSize: 16, fontWeight: 'bold' }}>Rate:</Text>
+                    <Picker
+                        selectedValue={rating}
+                        style={{ height: 50, width: 250 }}
+                        onValueChange={(itemValue, itemIndex) => {
+                            console.log('Selected item index:', itemIndex);
+                            setrating(itemValue);
+                        }}
+                    >
+                        <Picker.Item label="1" value="1" />
+                        <Picker.Item label="2" value="2" />
+                        <Picker.Item label="3" value="3" />
+                        <Picker.Item label="4" value="4" />
+                        <Picker.Item label="5" value="5" />
+                    </Picker>
+                </View>
+
             </View>
             <TouchableOpacity style={[styles.addButton, { paddingHorizontal: 20 }]} onPress={handleAddReview}>
                 <Text style={{ color: 'white' }}>Add Review</Text>
@@ -117,7 +130,7 @@ const styles = StyleSheet.create({
         color: '#3780D1'
     },
     inputContainer: {
-        marginBottom: 30,
+        marginBottom: 50,
     },
     input: {
         height: 40,

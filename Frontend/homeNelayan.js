@@ -88,7 +88,7 @@ const HomeNelayan = () => {
           <View style={styles.productContainer}>
             {renderProductImage(item)}
             <Text style={styles.details}>{item.productname}</Text>
-            <Text style={styles.details}>Rp.{item.productcost}</Text>
+            <Text style={styles.details}>Rp.{item.productcost}/kg</Text>
             <TouchableOpacity style={styles.viewDetails} onPress={() => navigateToProductDetails(item.productid)}>
               <Text style={{ color: 'white', fontSize: 8 }}>View Detail</Text>
             </TouchableOpacity>
@@ -191,7 +191,7 @@ const HomeTrader = () => {
           <View style={styles.productContainer}>
             {renderProductImage(item)}
             <Text style={styles.details}>{item.productname}</Text>
-            <Text style={styles.details}>Rp.{item.productcost}</Text>
+            <Text style={styles.details}>Rp.{item.productcost}/kg</Text>
             <TouchableOpacity style={styles.viewDetails} onPress={() => navigateToProductDetails(item.productid, item.productname)}>
               <Text style={{ color: 'white', fontSize: 8 }}>View Detail</Text>
             </TouchableOpacity>

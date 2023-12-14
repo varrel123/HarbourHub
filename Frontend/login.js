@@ -22,7 +22,7 @@ const LoginFisherman = () => {
   const handleLogin = async () => {
     if (Email && Password) {
       try {
-        const response = await axios.post('http://192.168.0.137:5000/loginFisherMan', { Email, Password });
+        const response = await axios.post('http://172.20.10.2:5000/loginFisherMan', { Email, Password });
   
         console.log('Response from server:', response);
   

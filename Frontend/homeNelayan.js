@@ -4,7 +4,8 @@ import { useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { base64 } from 'base-64';
+import { base64, encode } from 'base-64';
+
 
 const HomeNelayan = () => {
   const navigation = useNavigation();
@@ -13,7 +14,7 @@ const HomeNelayan = () => {
   const fetchProducts = async () => {
     try {
       const accountid = await AsyncStorage.getItem('accountid');
-      const response = await axios.post('http://192.168.0.137:5000/showproduct', { accountid });
+      const response = await axios.post('http://172.20.10.2:5000/showproduct', { accountid });
 
       if (response.status === 200) {
         console.log('Products:', response.data.accounts);
@@ -48,8 +49,8 @@ const HomeNelayan = () => {
 
   const arrayBufferToBase64 = (buffer) => {
     const binary = new Uint8Array(buffer);
-    const base64String = base64.encode(binary);
-    return 'data:image/png;base64,' + base64String;
+    const base64String = encode(binary);
+    return 'data:image/jpeg;base64,' + base64String;
   };
 
   const renderProductImage = (product) => {
@@ -61,17 +62,17 @@ const HomeNelayan = () => {
         const base64Image = arrayBufferToBase64(product.productimg.data);
         console.log('Base64 Image:', base64Image);
         return <Image source={{ uri: base64Image }} style={styles.productImage} />;
-      } 
-      
+        // return <Image source={{ uri: 'https://4.bp.blogspot.com/-HcxBqohShO8/XEDWBFODU_I/AAAAAAAAACE/40-C4_gIA4gLFpMAtl0XtfiRsskQEdyWACLcBGAs/s1600/Ikan%2Btongkol%2Bmemiliki%2Bciri%2Bkhusus.jpg' }} style={styles.productImage} />;
+      }
       catch (error) {
         console.error('Error converting image data to base64:', error);
         return <Text>Error loading image</Text>;
       }
-      
     }
     console.log('No Image Data');
     return <Text>No Image</Text>;
   };
+
 
   return (
     <View style={styles.container}>
@@ -142,18 +143,18 @@ const HomeTrader = () => {
   const navigateToProductDetails = async (productId, productName) => {
     // Simpan productid dan productname ke AsyncStorage sebelum menavigasi ke halaman detail
     try {
-        await AsyncStorage.setItem('productid', productId);
-        await AsyncStorage.setItem('productname', productName);
-        navigation.navigate('ProductDetailsTrader');
+      await AsyncStorage.setItem('productid', productId);
+      await AsyncStorage.setItem('productname', productName);
+      navigation.navigate('ProductDetailsTrader');
     } catch (error) {
-        console.error('Error saving data to AsyncStorage:', error);
+      console.error('Error saving data to AsyncStorage:', error);
     }
-};
+  };
 
   const arrayBufferToBase64 = (buffer) => {
     const binary = new Uint8Array(buffer);
-    const base64String = base64.encode(binary);
-    return 'data:image/png;base64,' + base64String;
+    const base64String = encode(binary);
+    return 'data:image/jpeg;base64,' + base64String;
   };
 
   const renderProductImage = (product) => {
@@ -165,13 +166,12 @@ const HomeTrader = () => {
         const base64Image = arrayBufferToBase64(product.productimg.data);
         console.log('Base64 Image:', base64Image);
         return <Image source={{ uri: base64Image }} style={styles.productImage} />;
-      } 
-      
+        // return <Image source={{ uri: 'https://4.bp.blogspot.com/-HcxBqohShO8/XEDWBFODU_I/AAAAAAAAACE/40-C4_gIA4gLFpMAtl0XtfiRsskQEdyWACLcBGAs/s1600/Ikan%2Btongkol%2Bmemiliki%2Bciri%2Bkhusus.jpg' }} style={styles.productImage} />;
+      }
       catch (error) {
         console.error('Error converting image data to base64:', error);
         return <Text>Error loading image</Text>;
       }
-      
     }
     console.log('No Image Data');
     return <Text>No Image</Text>;
@@ -192,7 +192,7 @@ const HomeTrader = () => {
             {renderProductImage(item)}
             <Text style={styles.details}>{item.productname}</Text>
             <Text style={styles.details}>{item.productcost}</Text>
-            <TouchableOpacity style={styles.viewDetails} onPress={() => navigateToProductDetails(item.productid,item.productname)}>
+            <TouchableOpacity style={styles.viewDetails} onPress={() => navigateToProductDetails(item.productid, item.productname)}>
               <Text style={{ color: 'white', fontSize: 8 }}>View Detail</Text>
             </TouchableOpacity>
           </View>
@@ -267,4 +267,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export {HomeNelayan, HomeTrader};
+export { HomeNelayan, HomeTrader };

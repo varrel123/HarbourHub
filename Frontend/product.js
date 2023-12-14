@@ -45,7 +45,7 @@ const AddProduct = ({ navigation }) => {
 
     const handleAddProduct = async () => {
         if (productname && productcost && description && accountid && posteddate && catchdate && productimg) {
-            const response = await axios.post('http://192.168.0.137:5000/addproduct', {
+            const response = await axios.post('http://172.20.10.2:5000/addproduct', {
                 productname,
                 productcost,
                 accountid,
@@ -204,7 +204,7 @@ const EditProduct = ({ navigation }) => {
             };
 
             try {
-                const response = await axios.put('http://192.168.0.137:5000/updateproduct', requestData);
+                const response = await axios.put('http://172.20.10.2:5000/updateproduct', requestData);
 
                 console.log(response);
 

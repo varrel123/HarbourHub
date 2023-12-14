@@ -26,7 +26,7 @@ const ProductDetails = () => {
         console.log('ID product yang diambil dari AsyncStorage:', productid);
         if (productid) {
           // Menggunakan permintaan POST untuk mendapatkan informasi product
-          axios.post('http://192.168.0.137:5000/showproductID', { productid })
+          axios.post('http://172.20.10.2:5000/showproductID', { productid })
             .then((response) => {
               if (response.data && response.data.accounts && response.data.accounts.length > 0) {
                 setProductInfo(response.data.accounts[0]);
@@ -67,6 +67,7 @@ const ProductDetails = () => {
               <Text style={styles.info}>{new Date(value).toLocaleDateString()}</Text>
             ) : key === 'productimg' && value ? (
               <Image source={{ uri: `data:image/png;base64,${value}` }} style={styles.productImage} />
+              // return <Image source={{ uri: 'https://4.bp.blogspot.com/-HcxBqohShO8/XEDWBFODU_I/AAAAAAAAACE/40-C4_gIA4gLFpMAtl0XtfiRsskQEdyWACLcBGAs/s1600/Ikan%2Btongkol%2Bmemiliki%2Bciri%2Bkhusus.jpg' }} style={styles.productImage} />;
             ) : (
               <Text style={styles.info}>{value}</Text>
             )}

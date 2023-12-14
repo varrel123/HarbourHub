@@ -15,15 +15,20 @@
     "@react-native-community/datetimepicker": "7.2.0",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/stack": "^6.3.20",
+    "atob": "^2.1.2",
     "axios": "^1.6.2",
     "base-64": "^1.0.0",
     "base64-js": "^1.5.1",
+    "buffer": "^6.0.3",
     "expo": "~49.0.15",
+    "expo-file-system": "^15.6.0",
     "expo-image-picker": "~14.3.2",
     "expo-status-bar": "~1.6.0",
+    "image-data-uri": "^2.0.1",
     "react": "18.2.0",
     "react-native": "0.72.6",
-    "react-native-datepicker": "^1.7.2"
+    "react-native-datepicker": "^1.7.2",
+    "react-native-fast-image": "^8.6.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

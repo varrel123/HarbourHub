@@ -49,11 +49,11 @@ const ShowCart = () => {
       if (product.productimg && product.productimg.data) {
         const base64Image = arrayBufferToBase64(product.productimg.data);
         console.log('Base64 Image:', base64Image);
-        return <Image source={{ uri: base64Image }} style={styles.productImage} />;
+        return <Image source={{ uri: 'https://4.bp.blogspot.com/-HcxBqohShO8/XEDWBFODU_I/AAAAAAAAACE/40-C4_gIA4gLFpMAtl0XtfiRsskQEdyWACLcBGAs/s1600/Ikan%2Btongkol%2Bmemiliki%2Bciri%2Bkhusus.jpg' }} style={styles.productImage} />;
       }
   
       console.log('No Image Data');
-      return <Text>No Image</Text>;
+      return <Image source={{ uri: 'https://4.bp.blogspot.com/-HcxBqohShO8/XEDWBFODU_I/AAAAAAAAACE/40-C4_gIA4gLFpMAtl0XtfiRsskQEdyWACLcBGAs/s1600/Ikan%2Btongkol%2Bmemiliki%2Bciri%2Bkhusus.jpg' }} style={styles.productImage} />;
     };
   
     return (
@@ -74,18 +74,15 @@ const ShowCart = () => {
                 numColumns={1}
                 keyExtractor={(item) => item.productid}
                 renderItem={({ item }) => (
-                    <View style={styles.productContainer}>
+                    <View style={styles.productContainer}> 
                     {renderProductImage(item)}
                     <Text style={styles.details}>Shopping Cart ID: {item.shoppingcartid}</Text>
                     <Text style={styles.details}>Product Name: {item.productname}</Text>
                     <Text style={styles.details}>Account ID: {item.accountid}</Text>
                     <Text style={styles.details}>Product ID:{item.productid}</Text>
-                    <Text style={styles.details}>Total :{item.total}</Text>
+                    <Text style={styles.details}>Total : Rp.{item.total}</Text>
                     <TouchableOpacity style={styles.viewDetails} onPress={() => navigateToPayment(item.productid, item.accountid, item.shoppingcartid)}>
                         <Text style={{ color: 'white', fontSize: 8}}>Payment</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.viewDetails} onPress={() => navigateToReview(item.productid)}>
-                        <Text style={{ color: 'white', fontSize: 8 }}>Review</Text>
                     </TouchableOpacity>
                     </View>
                 )}
@@ -195,6 +192,15 @@ const ShowCart = () => {
         borderRadius: 8,
         width: 350,
         alignItems: 'center',
+    },
+    actionButtons: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      marginTop: 10,
+    },
+    buttonText: {
+      color: 'white',
+      fontSize: 12,
     },
   });
 

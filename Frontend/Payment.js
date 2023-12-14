@@ -64,8 +64,6 @@ const Payment = ({ navigation }) => {
         try {
             const paymentid = await handlePayment(accountid, shoppingcartid, details);
             if (paymentid) {
-                // await AsyncStorage.setItem('ShoppingCartID', shoppingCartID);
-                // await AsyncStorage.setItem('accountid', accountid);
                 navigation.navigate('Review');
             }
         } catch (error) {
@@ -84,16 +82,16 @@ const Payment = ({ navigation }) => {
             <View style={[styles.inputContainer, { paddingHorizontal: 20 }]}>
                 <Text>Payment Method:</Text>
                 <TextInput
-                    style={[styles.input, { height: 80 }]}
+                    style={[styles.input, { height: 50 }]}
                     onChangeText={setDetails}
                     value={details}
                 />
             </View>
             <TouchableOpacity
-                style={[styles.addButton, { paddingHorizontal: 20 }]}
+                style={[styles.addButton, { paddingHorizontal: 50 }]}
                 onPress={() => navigateToReview(accountid, shoppingcartid, details)}
             >
-                <Text style={{ color: 'white' }}>Payment</Text>
+                <Text style={{ color: 'white' }}>Checkout</Text>
             </TouchableOpacity>
         </View>
     );
@@ -137,10 +135,10 @@ const styles = StyleSheet.create({
     },
     addButton: {
         position: 'absolute',
-        bottom: 20, // Atur jarak dari bawah layar
-        left: '8%', // Pusatkan tombol di tengah layar
+        bottom: 40, // Atur jarak dari bawah layar
+        left: '6%', // Pusatkan tombol di tengah layar
         backgroundColor: '#3780D1',
-        padding: 10,
+        padding: 20,
         borderRadius: 8,
         width: 350,
         alignItems: 'center',

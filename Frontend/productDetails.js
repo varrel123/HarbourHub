@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image,FlatList  } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -61,15 +61,16 @@ const ProductDetails = () => {
       <View style={styles.inputContainer}>
         {Object.entries(productInfo).map(([key, value]) => (
           <View style={styles.row} key={key}>
-            <Text style={styles.label}>{key}</Text>
-            <Text style={styles.colon}>:</Text>
-            {key === 'posteddate' || key === 'catchdate' ? (
-              <Text style={styles.info}>{new Date(value).toLocaleDateString()}</Text>
-            ) : key === 'productimg' && value ? (
-              <Image source={{ uri: `data:image/png;base64,${value}` }} style={styles.productImage} />
-              // return <Image source={{ uri: 'https://4.bp.blogspot.com/-HcxBqohShO8/XEDWBFODU_I/AAAAAAAAACE/40-C4_gIA4gLFpMAtl0XtfiRsskQEdyWACLcBGAs/s1600/Ikan%2Btongkol%2Bmemiliki%2Bciri%2Bkhusus.jpg' }} style={styles.productImage} />;
-            ) : (
-              <Text style={styles.info}>{value}</Text>
+            {key !== 'productimg' && (
+              <>
+                <Text style={styles.label}>{key}</Text>
+                <Text style={styles.colon}>:</Text>
+                {key === 'posteddate' || key === 'catchdate' ? (
+                  <Text style={styles.info}>{new Date(value).toLocaleDateString()}</Text>
+                ) : (
+                  <Text style={styles.info}>{value}</Text>
+                )}
+              </>
             )}
           </View>
         ))}
@@ -87,7 +88,7 @@ const ProductDetails = () => {
 
 const ProductDetailsTrader = () => {
   const navigation = useNavigation();
-  
+
 
   const [productInfo, setProductInfo] = useState({
     productid: 0,
@@ -179,18 +180,20 @@ const ProductDetailsTrader = () => {
           <AntDesign name="home" size={24} color="#3780D1" />
         </TouchableOpacity>
       </View>
-
+      
       <View style={styles.inputContainer}>
         {Object.entries(productInfo).map(([key, value]) => (
           <View style={styles.row} key={key}>
-            <Text style={styles.label}>{key}</Text>
-            <Text style={styles.colon}>:</Text>
-            {key === 'posteddate' || key === 'catchdate' ? (
-              <Text style={styles.info}>{new Date(value).toLocaleDateString()}</Text>
-            ) : key === 'productimg' && value ? (
-              <Image source={{ uri: `data:image/png;base64,${value}` }} style={styles.productImage} />
-            ) : (
-              <Text style={styles.info}>{value}</Text>
+            {key !== 'productimg' && (
+              <>
+                <Text style={styles.label}>{key}</Text>
+                <Text style={styles.colon}>:</Text>
+                {key === 'posteddate' || key === 'catchdate' ? (
+                  <Text style={styles.info}>{new Date(value).toLocaleDateString()}</Text>
+                ) : (
+                  <Text style={styles.info}>{value}</Text>
+                )}
+              </>
             )}
           </View>
         ))}
@@ -290,4 +293,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export {ProductDetails, ProductDetailsTrader};
+export { ProductDetails, ProductDetailsTrader };

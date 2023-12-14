@@ -61,8 +61,8 @@ const HomeNelayan = () => {
         console.log('Product Image Data:', product.productimg.data);
         const base64Image = arrayBufferToBase64(product.productimg.data);
         console.log('Base64 Image:', base64Image);
-        return <Image source={{ uri: base64Image }} style={styles.productImage} />;
-        // return <Image source={{ uri: 'https://4.bp.blogspot.com/-HcxBqohShO8/XEDWBFODU_I/AAAAAAAAACE/40-C4_gIA4gLFpMAtl0XtfiRsskQEdyWACLcBGAs/s1600/Ikan%2Btongkol%2Bmemiliki%2Bciri%2Bkhusus.jpg' }} style={styles.productImage} />;
+        // return <Image source={{ uri: base64Image }} style={styles.productImage} />;
+        return <Image source={{ uri: 'https://4.bp.blogspot.com/-HcxBqohShO8/XEDWBFODU_I/AAAAAAAAACE/40-C4_gIA4gLFpMAtl0XtfiRsskQEdyWACLcBGAs/s1600/Ikan%2Btongkol%2Bmemiliki%2Bciri%2Bkhusus.jpg' }} style={styles.productImage} />;
       }
       catch (error) {
         console.error('Error converting image data to base64:', error);
@@ -88,7 +88,7 @@ const HomeNelayan = () => {
           <View style={styles.productContainer}>
             {renderProductImage(item)}
             <Text style={styles.details}>{item.productname}</Text>
-            <Text style={styles.details}>{item.productcost}</Text>
+            <Text style={styles.details}>Rp.{item.productcost}</Text>
             <TouchableOpacity style={styles.viewDetails} onPress={() => navigateToProductDetails(item.productid)}>
               <Text style={{ color: 'white', fontSize: 8 }}>View Detail</Text>
             </TouchableOpacity>
@@ -165,8 +165,8 @@ const HomeTrader = () => {
         console.log('Product Image Data:', product.productimg.data);
         const base64Image = arrayBufferToBase64(product.productimg.data);
         console.log('Base64 Image:', base64Image);
-        return <Image source={{ uri: base64Image }} style={styles.productImage} />;
-        // return <Image source={{ uri: 'https://4.bp.blogspot.com/-HcxBqohShO8/XEDWBFODU_I/AAAAAAAAACE/40-C4_gIA4gLFpMAtl0XtfiRsskQEdyWACLcBGAs/s1600/Ikan%2Btongkol%2Bmemiliki%2Bciri%2Bkhusus.jpg' }} style={styles.productImage} />;
+        // return <Image source={{ uri: base64Image }} style={styles.productImage} />;
+        return <Image source={{ uri: 'https://4.bp.blogspot.com/-HcxBqohShO8/XEDWBFODU_I/AAAAAAAAACE/40-C4_gIA4gLFpMAtl0XtfiRsskQEdyWACLcBGAs/s1600/Ikan%2Btongkol%2Bmemiliki%2Bciri%2Bkhusus.jpg' }} style={styles.productImage} />;
       }
       catch (error) {
         console.error('Error converting image data to base64:', error);
@@ -191,7 +191,7 @@ const HomeTrader = () => {
           <View style={styles.productContainer}>
             {renderProductImage(item)}
             <Text style={styles.details}>{item.productname}</Text>
-            <Text style={styles.details}>{item.productcost}</Text>
+            <Text style={styles.details}>Rp.{item.productcost}</Text>
             <TouchableOpacity style={styles.viewDetails} onPress={() => navigateToProductDetails(item.productid, item.productname)}>
               <Text style={{ color: 'white', fontSize: 8 }}>View Detail</Text>
             </TouchableOpacity>

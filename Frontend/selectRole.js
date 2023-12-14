@@ -6,8 +6,8 @@ const WelcomePage = () => {
   const navigation = useNavigation();
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#84D3EB' }}>
-      <Text style={{ fontSize: 30, color: 'white', marginBottom: 16 }}>Welcome to:</Text>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#3780D1' }}>
+      <Text style={{ fontSize: 30, color: 'white', marginBottom: 16, }}>Welcome to</Text>
       <TouchableOpacity onPress={() => navigation.navigate('SelectRole')}>
         <Image 
           
@@ -30,8 +30,8 @@ const SelectRole = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#84D3EB' }}>
-      <Text style={{ fontSize: 24, color: 'white', marginBottom: 16 }}>Select Role:</Text>
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#3780D1' }}>
+      <Text style={{ fontSize: 24, color: 'white', marginBottom: 16 }}>Use Harbour Hub as</Text>
       <TouchableOpacity
         style={{ backgroundColor: 'white', padding: 16, borderRadius: 8, marginBottom: 16, width: 200, alignItems: 'center' }}
         onPress={handleNelayanPress}

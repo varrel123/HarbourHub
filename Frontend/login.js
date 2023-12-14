@@ -22,7 +22,7 @@ const LoginFisherman = () => {
   const handleLogin = async () => {
     if (Email && Password) {
       try {
-        const response = await axios.post('http://172.20.10.2:5000/loginFisherMan', { Email, Password });
+        const response = await axios.post('http://192.168.1.2:5000/loginFisherMan', { Email, Password });
   
         console.log('Response from server:', response);
   
@@ -62,10 +62,7 @@ const LoginFisherman = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={styles.topRight}>
-        <Text style={{ fontSize: 20, paddingLeft: 10, paddingTop: 10, color: '#3780D1', backgroundColor: '#84D3EB' }}>Select Role</Text>
-      </View>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#84D3EB' }}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#3780D1' }}>
         <View style={{ backgroundColor: 'white', padding: 16, width: Dimensions.get('window').width * 0.8, borderRadius: 8 }}>
           <Text style={{ fontSize: 24, marginBottom: 16, textAlign: 'center', color: '#3780D1' }}>Login Fisherman</Text>
           <TextInput
@@ -87,7 +84,7 @@ const LoginFisherman = () => {
             style={{ backgroundColor: '#3780D1', padding: 16, alignItems: 'center', borderRadius: 8 }}
             onPress={handleLogin}
           >
-            <Text style={{ color: 'white', fontSize: 18 }}>NEXT</Text>
+            <Text style={{ color: 'white', fontSize: 18 }}>Login</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity style={{ marginTop: 16 }} onPress={navigateToRegister}>
@@ -115,7 +112,7 @@ const LoginTrader = () => {
   const handleLogin = async () => {
     if (Email && Password) {
       try {
-        const response = await axios.post('http://172.20.10.2:5000/loginTraders', { Email, Password });
+        const response = await axios.post('http://192.168.1.2:5000/loginTraders', { Email, Password });
   
         console.log('Response from server:', response);
   
@@ -154,12 +151,9 @@ const LoginTrader = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={styles.topRight}>
-        <Text style={{ fontSize: 20, paddingLeft: 10, paddingTop: 10, color: '#3780D1', backgroundColor: '#84D3EB' }}>Select Role</Text>
-      </View>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#84D3EB' }}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#3780D1' }}>
         <View style={{ backgroundColor: 'white', padding: 16, width: Dimensions.get('window').width * 0.8, borderRadius: 8 }}>
-          <Text style={{ fontSize: 24, marginBottom: 16, textAlign: 'center', color: '#3780D1' }}>Login Trader</Text>
+          <Text style={{ fontSize: 24, marginBottom: 16, textAlign: 'center', color: '#3780D1' }}>Login as Trader</Text>
           <TextInput
             style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 16, paddingLeft: 10, borderRadius: 8 }}
             onChangeText={setEmail}
@@ -179,7 +173,7 @@ const LoginTrader = () => {
             style={{ backgroundColor: '#3780D1', padding: 16, alignItems: 'center', borderRadius: 8 }}
             onPress={handleLogin}
           >
-            <Text style={{ color: 'white', fontSize: 18 }}>NEXT</Text>
+            <Text style={{ color: 'white', fontSize: 18 }}>Login</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity style={{ marginTop: 16 }} onPress={navigateToRegister}>

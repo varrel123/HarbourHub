@@ -33,14 +33,16 @@ const Cart = ({ navigation }) => {
 
     const handleAddCart = async () => {
         try {
-            if (totalAmount && productid && accountid) {
-                const response = await axios.post('http://172.20.10.2:5000/addcart', {
+            if (totalAmount === "0" || totalAmount === "") {
+                alert("Please enter the correct amount.");
+            } else if (productid && accountid) {
+                const response = await axios.post('http://192.168.1.2:5000/addcart', {
                     accountid,
                     productid,
                     productname,
-                    totalamount: totalAmount, // Ensure the correct field name is used
+                    totalamount: totalAmount,
                 });
-
+    
                 if (response.status === 200 && response.data.message === 'Product Added to Cart') {
                     alert('Add product to cart successful!');
                     navigation.navigate('homeTrader');
@@ -63,21 +65,25 @@ const Cart = ({ navigation }) => {
                     <AntDesign name="arrowleft" size={24} color='#3780D1' />
                 </TouchableOpacity>
                 <Text style={styles.navTitle}>Add Cart</Text>
+                <Text style={styles.navTitle}></Text>
+
             </View>
             <View style={[styles.inputContainer, { paddingHorizontal: 20 }]}>
-                <Text>Total Amount:</Text>
+                <Text style={{fontSize: 20, color: '#3780D1'}}>Total Amount:</Text>
                 <TextInput
-                    style={[styles.input, { height: 80 }]}
+                    style={[styles.input, ]}
                     onChangeText={setTotalAmount}
                     value={totalAmount}
                 />
             </View>
-            <TouchableOpacity
-                style={[styles.addButton, { paddingHorizontal: 20 }]}
-                onPress={() => handleAddCart()}
-            >
-                <Text style={{ color: 'white' }}>Add Cart</Text>
-            </TouchableOpacity>
+            <View style={styles.tabBar}>
+                <TouchableOpacity
+                    style={[styles.editButton, { paddingHorizontal: 20 }]}
+                    onPress={() => handleAddCart()}
+                >
+                    <Text style={{ color: 'white' }}>Add Cart</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };
@@ -104,11 +110,11 @@ const styles = StyleSheet.create({
     },
     input: {
         height: 40,
-        borderColor: 'gray',
         borderWidth: 1,
         paddingHorizontal: 10,
         marginBottom: 10,
         borderRadius: 8,
+        borderColor: '#3780D1'
     },
     pickImageButton: {
         backgroundColor: '#3780D1',
@@ -128,6 +134,25 @@ const styles = StyleSheet.create({
         width: 350,
         alignItems: 'center',
     },
+    editButton: {
+        backgroundColor: '#3780D1',
+        paddingVertical: 10,
+        alignItems: 'center',
+        borderRadius: 5,
+        alignSelf: 'center',
+        width: 150
+      },
+      tabBar: {
+        height: 60,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: '#fff',
+      },
 });
 
 export default Cart;

@@ -24,7 +24,7 @@ const FisherManAccount = ({ navigation }) => {
 
                 if (accountid) {
                     // Menggunakan permintaan GET untuk mendapatkan informasi pengguna
-                    axios.post('http://172.20.10.2:5000/showuser', { accountid })
+                    axios.post('http://192.168.1.2:5000/showuser', { accountid })
                         .then((response) => {
                             if (response.status === 200) {
                                 setAccountInfo(response.data.account);
@@ -75,7 +75,7 @@ const FisherManAccount = ({ navigation }) => {
     
 };
 
-const TraderAccount = () => {
+const TraderAccount = ({navigation}) => {
     const [accountInfo, setAccountInfo] = useState({
         accountid: 0,
         name: '',
@@ -94,7 +94,7 @@ const TraderAccount = () => {
 
                 if (accountid) {
                     // Menggunakan permintaan GET untuk mendapatkan informasi pengguna
-                    axios.post('http://172.20.10.2:5000/showuser', { accountid })
+                    axios.post('http://192.168.1.2:5000/showuser', { accountid })
                         .then((response) => {
                             if (response.status === 200) {
                                 setAccountInfo(response.data.account);
@@ -125,6 +125,9 @@ const TraderAccount = () => {
                     <AntDesign name="home" size={24} color='#3780D1' />
                 </TouchableOpacity>
             </View>
+            <View style={styles.profileImageContainer}>
+                <AntDesign name="user" size={150} color='#3780D1' style={styles.profileImage} />
+            </View>
             <View style={[styles.inputContainer, { paddingHorizontal: 20 }]}>
                 {Object.entries(accountInfo).map(([key, value]) => (
                     <View style={styles.row} key={key}>
@@ -141,7 +144,7 @@ const TraderAccount = () => {
     );
 };
 
-const EditTraderAccount = () => {
+const EditTraderAccount = ({navigation}) => {
     const [Name, setName] = useState('');
     const [Email, setEmail] = useState('');
     const [Password, setPassword] = useState('');
@@ -165,7 +168,7 @@ const EditTraderAccount = () => {
     const handleEditAccount = async () => {
         if (accountid && Name && Email && Password && Address && Phone && Role) {
             // Modify the request to include the user's information
-            const response = await axios.put('http://192.168.0.137:5000/updateaccount', {
+            const response = await axios.put('http://192.168.1.2:5000/updateaccount', {
                 accountid,
                 Name,
                 Email,
@@ -302,7 +305,7 @@ const EditFisherManAccount = ({ navigation }) => {
     const handleEditAccount = async () => {
         if (accountid && Name && Email && Password && Address && Phone && Role) {
             // Modify the request to include the user's information
-            const response = await axios.put('http://172.20.10.2:5000/updateaccount', {
+            const response = await axios.put('http://192.168.1.2:5000/updateaccount', {
                 accountid,
                 Name,
                 Email,

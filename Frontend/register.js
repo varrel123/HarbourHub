@@ -15,7 +15,7 @@ const RegistrationPage = () => {
   const handleRegistration = async () => {
     if (Name && Email && Address && Phone && Password && Role) {
                                        //sesuaikan dengan IP Address masing"
-      const response = await axios.post('http://192.168.1.19:5000/register', { Name, Email, Password, Address, Phone, Role })
+      const response = await axios.post('http://192.168.1.2:5000/register', { Name, Email, Password, Address, Phone, Role })
         .then(function (response) {
           console.log(response);
           if (response.status === 200) {

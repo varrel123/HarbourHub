@@ -13,7 +13,7 @@ const ShowCart = () => {
     const fetchProducts = async () => {
       try {
         const accountid = await AsyncStorage.getItem('accountid');
-        const response = await axios.post('http://172.20.10.2:5000/showcart', { accountid });
+        const response = await axios.post('http://192.168.1.2:5000/showcart', { accountid });
   
         if (response.status === 200) {
           setProducts(response.data.accounts);
@@ -75,15 +75,25 @@ const ShowCart = () => {
                 keyExtractor={(item) => item.productid}
                 renderItem={({ item }) => (
                     <View style={styles.productContainer}> 
-                    {renderProductImage(item)}
-                    <Text style={styles.details}>Shopping Cart ID: {item.shoppingcartid}</Text>
-                    <Text style={styles.details}>Product Name: {item.productname}</Text>
-                    <Text style={styles.details}>Account ID: {item.accountid}</Text>
-                    <Text style={styles.details}>Product ID:{item.productid}</Text>
-                    <Text style={styles.details}>Total : Rp.{item.total}</Text>
-                    <TouchableOpacity style={styles.viewDetails} onPress={() => navigateToPayment(item.productid, item.accountid, item.shoppingcartid)}>
-                        <Text style={{ color: 'white', fontSize: 8}}>Payment</Text>
-                    </TouchableOpacity>
+                      {renderProductImage(item)}
+                      <View style={{flexDirection: 'row'}}>
+                        <Text style={styles.details}>Shopping Cart ID: {item.shoppingcartid}</Text>
+                      </View>
+                      <View style={{flexDirection: 'row'}}>
+                        <Text style={styles.details}>Product Name: {item.productname}</Text>
+                      </View>
+                      <View style={{flexDirection: 'row'}}>
+                        <Text style={styles.details}>Account ID: {item.accountid}</Text>
+                      </View>
+                      <View style={{flexDirection: 'row'}}>
+                        <Text style={styles.details}>Product ID:{item.productid}</Text>
+                      </View>
+                      <View style={{flexDirection: 'row'}}>
+                        <Text style={styles.details}>Total : Rp.{item.total}</Text>
+                      </View>
+                      <TouchableOpacity style={styles.viewDetails} onPress={() => navigateToPayment(item.productid, item.accountid, item.shoppingcartid)}>
+                          <Text style={{ color: 'white'}}>Payment</Text>
+                      </TouchableOpacity>
                     </View>
                 )}
                 />
@@ -99,14 +109,12 @@ const ShowCart = () => {
       backgroundColor: '#F5FCFF',
     },
     viewDetails: {
-      backgroundColor: '#3780D1',
-      padding: 10,
-      marginRight: 10,
-      borderRadius: 8,
-      width: 150,
-      height: 30,
-      alignItems: 'center',
-      marginBottom: 10
+        backgroundColor: '#3780D1',
+        paddingVertical: 10,
+        alignItems: 'center',
+        borderRadius: 5,
+        alignSelf: 'center',
+        width: 150
     },
     address: {
       fontSize: 12,
@@ -125,10 +133,16 @@ const ShowCart = () => {
       margin: 10,
     },
     productContainer: {
-      padding: 5,
-      flex: 1,
+      height: 350,
+      width: 250,
       justifyContent: 'center',
       alignItems: 'center',
+      borderWidth: 1,
+      borderColor: '#3780D1',
+      borderRadius: 15,
+      marginHorizontal: 60,
+      marginVertical: 10
+
     },
     productImage: {
       width: 150,
@@ -164,7 +178,7 @@ const ShowCart = () => {
         color: '#3780D1'
     },
     inputContainer: {
-        marginBottom: 30,
+        marginBottom: 60
     },
     input: {
         height: 40,

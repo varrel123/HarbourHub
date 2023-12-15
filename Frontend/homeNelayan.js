@@ -115,7 +115,7 @@ useEffect(() => {
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, marginBottom: 0 }}>
-        <Text style={{color: '#3780D1', fontWeight: 'bold'}}>Trader Address </Text>
+        <Text style={{color: '#3780D1', fontWeight: 'bold'}}>{accountInfo.role} Address </Text>
         <Text style={{marginLeft: 'auto', color: '#3780D1', fontWeight:'bold'}}>{accountInfo.role}</Text>
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#3780D1', paddingHorizontal: 20 }}>
@@ -261,7 +261,7 @@ const HomeTrader = () => {
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, marginBottom: 0 }}>
-        <Text style={{color: '#3780D1', fontWeight: 'bold'}}>Trader Address </Text>
+        <Text style={{color: '#3780D1', fontWeight: 'bold'}}>{accountInfo.role} Address </Text>
         <Text style={{marginLeft: 'auto', color: '#3780D1', fontWeight:'bold'}}>{accountInfo.role}</Text>
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#3780D1', paddingHorizontal: 20 }}>

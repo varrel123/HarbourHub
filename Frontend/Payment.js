@@ -103,12 +103,12 @@ const Payment = ({ navigation }) => {
                     <AntDesign name="arrowleft" size={24} color='#3780D1' />
                 </TouchableOpacity>
                 <Text style={styles.navTitle}>Payment</Text>
-                <Text style={styles.navTitle}></Text>
+                <Text style={styles.navTitle}>  </Text>
             </View>
             <View style={[styles.inputContainer]}>
                 <Text style={{ color: '#3780D1', fontSize: 16, fontWeight: 'bold' }}>Payment Method:</Text>
                 <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.input}>
-                    <Text style={{ color: '#3780D1' }}>{details}</Text>
+                    <Text style={{ color: '#3780D1', paddingVertical: 10, alignSelf: 'center' }}>{details}</Text>
                 </TouchableOpacity>
 
                 <Modal

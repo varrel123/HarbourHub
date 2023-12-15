@@ -93,7 +93,7 @@ const AddReview = ({ navigation }) => {
                 </TouchableOpacity>
             </View>
             <View style={[styles.inputContainer, { paddingHorizontal: 20 }]}>
-                <Text style={{ marginRight: 10, fontSize: 16, fontWeight: 'bold' }}>Review Content:</Text>
+                <Text style={{ marginRight: 10, fontSize: 16, fontWeight: 'bold', color: '#3780D1' }}>Review Content:</Text>
                 <TextInput
                 style={styles.input}
                 onChangeText={setReviewContent}
@@ -101,8 +101,8 @@ const AddReview = ({ navigation }) => {
                 />
                 <TouchableOpacity onPress={() => setModalVisible(true)}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Text style={{ marginRight: 10, fontSize: 16, fontWeight: 'bold' }}>Rate:</Text>
-                    <Text style={{ color: '#3780D1' }}>{rating}</Text>
+                    <Text style={{ marginRight: 10, fontSize: 16, fontWeight: 'bold', color: '#3780D1' }}>Rate:</Text>
+                    <Text style={{ color: '#3780D1', fontWeight: 'bold' }}>{rating} / 5 </Text>
                 </View>
                 </TouchableOpacity>
             </View>
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     },
     input: {
         height: 40,
-        borderColor: 'gray',
+        borderColor:  '#3780D1',
         borderWidth: 1,
         paddingHorizontal: 10,
         marginBottom: 10,
